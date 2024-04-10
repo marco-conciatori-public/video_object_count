@@ -46,7 +46,7 @@ box_annotator = sv.BoxAnnotator(thickness=4, text_thickness=4, text_scale=2)
 # define call back function to be used in video processing
 def callback(frame: np.ndarray, index: int) -> np.ndarray:
     # model prediction on single frame and conversion to supervision Detections
-    results = model(frame, verbose=config.verbose)[0]
+    results = model(frame, verbose=False)[0]
     detections = sv.Detections.from_ultralytics(results)
     # only consider class id from selected_classes define above
     detections = detections[np.isin(detections.class_id, config.selected_classes)]
