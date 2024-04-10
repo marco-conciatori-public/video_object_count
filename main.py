@@ -57,6 +57,9 @@ def callback(frame: np.ndarray, index: int) -> np.ndarray:
         for confidence, class_id, tracker_id
         in zip(detections.confidence, detections.class_id, detections.tracker_id)
     ]
+    if config.verbose:
+        # if index % 30 == 0:
+            print(f'frame: {index}')
     annotated_frame = box_annotator.annotate(
         scene=frame.copy(),
         detections=detections,
