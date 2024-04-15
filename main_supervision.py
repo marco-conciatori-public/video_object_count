@@ -10,7 +10,6 @@ import global_constants
 ultralytics.checks()
 print('supervision.__version__:', sv.__version__)
 
-
 model_path = global_constants.model_folder + config.model_name
 model = YOLO(model=model_path, verbose=config.verbose)
 model.fuse()
@@ -27,16 +26,18 @@ class_names = [class_names_dict[class_id] for class_id in config.selected_classe
 print(f'class_names: {class_names}')
 
 # settings
-# LINE_START = sv.Point(50, 1500)
-# LINE_END = sv.Point(3840-50, 1500)
 output_path = global_constants.output_folder + 'counting_result_' + config.video_name
 
-sv.VideoInfo.from_video_path(video_path)
-
-# create BYTETracker instance
-byte_tracker = sv.ByteTrack(track_thresh=0.25, track_buffer=30, match_thresh=0.8, frame_rate=30)
 # create VideoInfo instance
 video_info = sv.VideoInfo.from_video_path(video_path)
+# create BYTETracker instance
+byte_tracker = sv.ByteTrack(
+    track_activation_threshold=0.25,
+    lost_track_buffer=30,
+    minimum_matching_threshold=0.8,
+    frame_rate=video_info.fps,
+)
+print(video_info)
 # create frame generator
 generator = sv.get_video_frames_generator(video_path)
 # create instance of BoxAnnotator
@@ -45,6 +46,9 @@ box_annotator = sv.BoxAnnotator(thickness=4, text_thickness=4, text_scale=2)
 
 # define call back function to be used in video processing
 def callback(frame: np.ndarray, index: int) -> np.ndarray:
+    if config.verbose:
+        if index % 30 == 0:
+            print(f'frame: {index}')
     # model prediction on single frame and conversion to supervision Detections
     results = model(frame, verbose=False)[0]
     detections = sv.Detections.from_ultralytics(results)
@@ -57,9 +61,6 @@ def callback(frame: np.ndarray, index: int) -> np.ndarray:
         for confidence, class_id, tracker_id
         in zip(detections.confidence, detections.class_id, detections.tracker_id)
     ]
-    if config.verbose:
-        # if index % 30 == 0:
-            print(f'frame: {index}')
     annotated_frame = box_annotator.annotate(
         scene=frame.copy(),
         detections=detections,
@@ -68,6 +69,6 @@ def callback(frame: np.ndarray, index: int) -> np.ndarray:
     # return frame with box annotated result
     return annotated_frame
 
-
+print('Processing video...')
 # process the whole video
 sv.process_video(source_path=video_path, target_path=output_path, callback=callback)
