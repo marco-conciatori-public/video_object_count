@@ -1,0 +1,10 @@
+verbose: True
+#video_name: vehicle-counting.mp4
+#video_name: 01270009.mp4 # persone
+video_name: 02040042.mp4 # persone + cani
+#video_name: 02180090.mp4 # moto
+model_name: yolov8n.pt
+#selected_classes: [2, 3, 5, 7]
+selected_classes: [0, 1, 2, 3]
+
+save_video: True
