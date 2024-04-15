@@ -1,3 +1,4 @@
-data_folder = 'data/'
-model_folder = 'models/'
-output_folder = 'output/'
+DATA_FOLDER = 'data/'
+MODEL_FOLDER = 'models/'
+OUTPUT_FOLDER = 'output/'
+CONFIG_PARAMETER_PATH = 'config.yaml'
