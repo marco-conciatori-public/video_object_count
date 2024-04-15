@@ -1,10 +1,10 @@
-def show_difference_dicts(d1: dict, d2: dict, level=0):
-    for key in d1.keys():
-        value1 = d1[key]
-        value2 = d2[key]
+def show_difference_dicts(true: dict, predicted: dict, level=0):
+    for key in true.keys():
+        print('  ' * level + key)
+        value1 = true[key]
+        value2 = predicted[key]
         if isinstance(value1, dict):
             show_difference_dicts(value1, value2)
         else:
-            print(f'{key}: {value1} vs {value2}')
-
-    return True
+            print('  ' * (level + 1) + 'true:' + str(value1))
+            print('  ' * (level + 1) + 'predicted:' + str(value2))

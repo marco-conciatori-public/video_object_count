@@ -1,5 +1,4 @@
 import cv2
-import ultralytics
 from ultralytics import YOLO
 from ultralytics.solutions import object_counter
 
@@ -8,8 +7,6 @@ from import_args import args
 
 
 def count_objects_(**kwargs) -> dict:
-    ultralytics.checks()
-
     parameters = args.import_and_check(global_constants.CONFIG_PARAMETER_PATH, **kwargs)
 
     # Download model in "models" folder if not present, and load it
@@ -18,36 +15,37 @@ def count_objects_(**kwargs) -> dict:
 
     # Load video
     video_path = global_constants.DATA_FOLDER + parameters['video_name']
-    print(f'video_path: {video_path}')
+
     cap = cv2.VideoCapture(video_path)
     assert cap.isOpened(), f'could not open file "{video_path}"'
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = int(cap.get(cv2.CAP_PROP_FPS))
-    print(f'width: {frame_width}, height: {frame_height}, fps: {fps}')
+
 
     # Classes
     # dict mapping class_id to class_name
     class_names_dict = model.names
-    # class_ids of interest
-    print(f'selected_classes: {parameters["selected_classes"]}')
     # class names of interest
     class_names = [class_names_dict[class_id] for class_id in parameters['selected_classes']]
-    print(f'class_names: {class_names}')
-
+    if parameters['verbose']:
+        print(f'video_path: {video_path}')
+        print(f'width: {frame_width}, height: {frame_height}, fps: {fps}')
+        print(f'selected_classes: {parameters["selected_classes"]}')
+        print(f'class_names: {class_names}')
     # Define region points
     half_width = int(frame_width / 2)
-    # region_points = [
-    #     (half_width, 0),
-    #     (half_width, frame_height),
-    # ]
-    distance_from_center = 10
     region_points = [
-        (half_width - distance_from_center, 0),
-        (half_width + distance_from_center, 0),
-        (half_width + distance_from_center, frame_height),
-        (half_width - distance_from_center, frame_height),
+        (half_width, 0),
+        (half_width, frame_height),
     ]
+    # distance_from_center = 10
+    # region_points = [
+    #     (half_width - distance_from_center, 0),
+    #     (half_width + distance_from_center, 0),
+    #     (half_width + distance_from_center, frame_height),
+    #     (half_width - distance_from_center, frame_height),
+    # ]
 
     if parameters['save_video']:
         # Video writer
@@ -74,9 +72,9 @@ def count_objects_(**kwargs) -> dict:
             if cap.get(cv2.CAP_PROP_POS_FRAMES) % 30 == 0:
                 print(f'\tProgress: {round(cap.get(cv2.CAP_PROP_POS_AVI_RATIO) * 100, 1)} %')
         success, im0 = cap.read()
-        if not success:
-            print("Video frame is empty or video processing has been successfully completed.")
-            break
+        # if not success:
+        #     print("Video frame is empty or video processing has been successfully completed.")
+        #     break
 
         tracks = model.track(
             source=im0,
@@ -95,13 +93,15 @@ def count_objects_(**kwargs) -> dict:
         'out_counts': counter.out_counts,
         'class_wise_count': counter.class_wise_count,
     }
-    print(f'in_counts: {counter.in_counts}')
-    print(f'out_counts: {counter.out_counts}')
-    print(f'class_wise_count: {counter.class_wise_count}')
+    if parameters['verbose']:
+        print(f'in_counts: {counter.in_counts}')
+        print(f'out_counts: {counter.out_counts}')
+        print(f'class_wise_count: {counter.class_wise_count}')
     cap.release()
     if parameters['save_video']:
         video_writer.release()
-        print(f'Video saved at: "{output_path}"')
+        if parameters['verbose']:
+            print(f'Video saved at: "{output_path}"')
     return counts
 
 
