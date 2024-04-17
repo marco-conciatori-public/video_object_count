@@ -4,28 +4,28 @@ by_file_name = {
         'in_counts': 0,
         'out_counts': 1,
         'class_wise_count': {
-            'person': 1,
+            'perso': {'in': 0, 'out': 1},
         },
     },
     '01280016.mp4': {
         'in_counts': 2,
         'out_counts': 0,
         'class_wise_count': {
-            'person': 2,
+            'perso': {'in': 2, 'out': 0},
         },
     },
     '02030028.mp4': {
         'in_counts': 2,
         'out_counts': 0,
         'class_wise_count': {
-            'person': 2,
+            'perso': {'in': 2, 'out': 0},
         },
     },
     '02040042.mp4': {
         'in_counts': 5,
         'out_counts': 0,
         'class_wise_count': {
-            'person': 5,
+            'perso': {'in': 5, 'out': 0},
         },
     },
     # '02140058.mp4':,
@@ -34,7 +34,7 @@ by_file_name = {
         'in_counts': 0,
         'out_counts': 1,
         'class_wise_count': {
-            'car': 1,
+            'car': {'in': 0, 'out': 1},
         },
     },
     # '02180080.mp4':,
@@ -42,8 +42,8 @@ by_file_name = {
         'in_counts': 8,
         'out_counts': 0,
         'class_wise_count': {
-            'person': 4,
-            'motorcycle': 4,
+            'perso': {'in': 4, 'out': 0},
+            'motorcycle': {'in': 4, 'out': 0},
         },
     },
     # '02190100.mp4',
