@@ -1,46 +1,46 @@
 by_file_name = {
     '01270009.mp4': {
-        'in_counts': 0,
-        'out_counts': 1,
+        'right_to_left': 0,
+        'left_to_right': 1,
         'class_wise_count': {
-            'perso': {'in': 0, 'out': 1},
+            'perso': {'right_to_left': 0, 'left_to_right': 1},
         },
     },
     '01280016.mp4': {
-        'in_counts': 2,
-        'out_counts': 0,
+        'right_to_left': 2,
+        'left_to_right': 0,
         'class_wise_count': {
-            'perso': {'in': 2, 'out': 0},
+            'perso': {'right_to_left': 2, 'left_to_right': 0},
         },
     },
     '02030028.mp4': {
-        'in_counts': 2,
-        'out_counts': 0,
+        'right_to_left': 2,
+        'left_to_right': 0,
         'class_wise_count': {
-            'perso': {'in': 2, 'out': 0},
+            'perso': {'right_to_left': 2, 'left_to_right': 0},
         },
     },
     '02040042.mp4': {
-        'in_counts': 5,
-        'out_counts': 0,
+        'right_to_left': 5,
+        'left_to_right': 0,
         'class_wise_count': {
-            'perso': {'in': 5, 'out': 0},
+            'perso': {'right_to_left': 5, 'left_to_right': 0},
         },
     },
 
     '02180074.mp4': {
-        'in_counts': 0,
-        'out_counts': 1,
+        'right_to_left': 0,
+        'left_to_right': 1,
         'class_wise_count': {
-            'car': {'in': 0, 'out': 1},
+            'car': {'right_to_left': 0, 'left_to_right': 1},
         },
     },
     '02180090.mp4': {
-        'in_counts': 8,
-        'out_counts': 0,
+        'right_to_left': 8,
+        'left_to_right': 0,
         'class_wise_count': {
-            'perso': {'in': 4, 'out': 0},
-            'motorcycle': {'in': 4, 'out': 0},
+            'perso': {'right_to_left': 4, 'left_to_right': 0},
+            'motorcycle': {'right_to_left': 4, 'left_to_right': 0},
         },
     },
     # '01250003.mp4':,
