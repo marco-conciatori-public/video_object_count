@@ -1,6 +1,6 @@
-import cv2
 from ultralytics import YOLO
 from ultralytics.solutions import object_counter
+import cv2
 
 import global_constants
 import utils
@@ -22,7 +22,6 @@ def count_objects_(**kwargs) -> dict:
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = int(cap.get(cv2.CAP_PROP_FPS))
-
 
     # Classes
     # dict mapping class_id to class_name
@@ -83,7 +82,7 @@ def count_objects_(**kwargs) -> dict:
         if parameters['save_video']:
             video_writer.write(im0)
 
-    counts = {
+    object_counts = {
         'in_counts': counter.in_counts,
         'out_counts': counter.out_counts,
         'class_wise_count': counter.class_wise_count,
@@ -93,14 +92,15 @@ def count_objects_(**kwargs) -> dict:
         print(f'out_counts: {counter.out_counts}')
         print(f'class_wise_count: {counter.class_wise_count}')
     cap.release()
+    # cv2.destroyAllWindows()
     if parameters['save_video']:
         video_writer.release()
         if parameters['verbose']:
             print(f'Video saved at: "{output_path}"')
-    return counts
+    return object_counts
 
 
 if __name__ == '__main__':
     counts = count_objects_()
-    # IN means object moving right to letf
+    # IN means object moving right to left
     # OUT means object moving left to right
