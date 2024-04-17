@@ -9,3 +9,7 @@ model_name: yolov8n.pt
 selected_classes: [0, 1, 2, 3]
 
 save_video: True
+
+# Object Counter
+# Euclidean distance from the line from which an object is counted
+line_dist_thresh: 40

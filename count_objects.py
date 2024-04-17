@@ -59,6 +59,7 @@ def count_objects_(**kwargs) -> dict:
         reg_pts=region_points,
         classes_names=class_names_dict,
         draw_tracks=False,
+        line_dist_thresh=parameters['line_dist_thresh'],
     )
 
     while cap.isOpened():
