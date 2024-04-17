@@ -98,7 +98,7 @@ def count_objects_(**kwargs) -> dict:
         print(f'out_counts: {counter.out_counts}')
         print(f'class_wise_count: {counter.class_wise_count}')
     cap.release()
-    # cv2.destroyAllWindows()
+    cv2.destroyAllWindows()
     if parameters['save_video']:
         video_writer.release()
         if parameters['verbose']:
