@@ -25,8 +25,6 @@ def count_objects_(**kwargs) -> dict:
     # Classes
     # dict mapping class_id to class_name
     class_names_dict = model.names
-    # class names of interest
-    class_names = [class_names_dict[class_id] for class_id in parameters['selected_classes']]
     if parameters['verbose']:
         print(f'video_path: {video_path}')
         print(f'width: {frame_width}, height: {frame_height}, fps: {fps}')
