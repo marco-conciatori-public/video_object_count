@@ -3,7 +3,7 @@ verbose: True
 #video_name: 01270009.mp4 # persone
 #video_name: 02040042.mp4 # persone + cani
 video_name: 02180090.mp4 # moto
-model_name: yolov8n.pt
+model_name: yolov8x.pt
 # class_ids of interest
 selected_classes: [
   0, # person
