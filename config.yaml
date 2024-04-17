@@ -5,12 +5,12 @@ verbose: True
 video_name: 02180090.mp4 # moto
 model_name: yolov8n.pt
 # class_ids of interest
-selected_classes: [0, 1, 2, 3]
 selected_classes: [
   0, # person
   1, # bicycle
   2, # car
   3, # motorcycle
+  5, # bus
 ]
 
 save_video: True
