@@ -67,9 +67,9 @@ def count_objects_(**kwargs) -> dict:
             if cap.get(cv2.CAP_PROP_POS_FRAMES) % 30 == 0:
                 print(f'\tProgress: {round(cap.get(cv2.CAP_PROP_POS_AVI_RATIO) * 100, 1)} %')
         success, im0 = cap.read()
-        # if not success:
-        #     print("Video frame is empty or video processing has been successfully completed.")
-        #     break
+        if not success:
+            # print("Video frame is empty or video processing has been successfully completed.")
+            break
 
         tracks = model.track(
             source=im0,
