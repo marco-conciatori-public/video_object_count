@@ -31,7 +31,9 @@ def count_objects_(**kwargs) -> dict:
         print(f'video_path: {video_path}')
         print(f'width: {frame_width}, height: {frame_height}, fps: {fps}')
         print(f'selected_classes: {parameters["selected_classes"]}')
-        print(f'class_names: {class_names}')
+        # class names of interest
+        selected_class_names = [class_names_dict[class_id] for class_id in parameters['selected_classes']]
+        print(f'selected_class_names: {selected_class_names}')
 
     if parameters['save_video']:
         # Video writer

@@ -11,5 +11,4 @@ for file_name, counts in true_counts_dict.items():
     print(f'\ttrue_counts:      {counts}')
     # utils.show_difference_dicts(true=counts, predicted=predicted_counts)
     print('--------------------------------------------------')
-    print()
 
