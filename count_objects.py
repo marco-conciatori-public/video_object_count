@@ -84,11 +84,15 @@ def count_objects_(**kwargs) -> dict:
         if parameters['save_video']:
             video_writer.write(im0)
 
+    # convert 'in' and 'out' counts to 'right_to_left' and 'left_to_right' counts
     object_counts = {
-        'in_counts': counter.in_counts,
-        'out_counts': counter.out_counts,
-        'class_wise_count': counter.class_wise_count,
+        'right_to_left': counter.in_counts,
+        'left_to_right': counter.out_counts,
+        'class_wise_count': {class_name: {'right_to_left': 0, 'left_to_right': 0} for class_name in counter.class_wise_count},
     }
+    for class_name in counter.class_wise_count:
+        object_counts['class_wise_count'][class_name]['right_to_left'] = counter.class_wise_count[class_name]['in']
+        object_counts['class_wise_count'][class_name]['left_to_right'] = counter.class_wise_count[class_name]['out']
     if parameters['verbose']:
         print(f'in_counts: {counter.in_counts}')
         print(f'out_counts: {counter.out_counts}')
