@@ -61,13 +61,14 @@ def count_objects_(**kwargs) -> dict:
         draw_tracks=False,
         line_dist_thresh=parameters['line_dist_thresh'],
     )
-
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     while cap.isOpened():
         if parameters['verbose']:
             if cap.get(cv2.CAP_PROP_POS_FRAMES) % 30 == 0:
-                print(f'\tProgress: {round(cap.get(cv2.CAP_PROP_POS_AVI_RATIO) * 100, 1)} %')
+                print(f'\tProgress: {round(cap.get(cv2.CAP_PROP_POS_FRAMES) / total_frames * 100, 1)} %')
         success, im0 = cap.read()
         if not success:
+            print(f'\tProgress: {round(cap.get(cv2.CAP_PROP_POS_FRAMES) / total_frames * 100, 1)} %')
             # print("Video frame is empty or video processing has been successfully completed.")
             break
 
@@ -102,6 +103,6 @@ def count_objects_(**kwargs) -> dict:
 
 
 if __name__ == '__main__':
-    counts = count_objects_()
     # IN means object moving right to left
     # OUT means object moving left to right
+    counts = count_objects_()
