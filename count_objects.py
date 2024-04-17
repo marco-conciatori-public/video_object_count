@@ -3,6 +3,7 @@ from ultralytics import YOLO
 from ultralytics.solutions import object_counter
 
 import global_constants
+import utils
 from import_args import args
 
 
@@ -33,19 +34,6 @@ def count_objects_(**kwargs) -> dict:
         print(f'width: {frame_width}, height: {frame_height}, fps: {fps}')
         print(f'selected_classes: {parameters["selected_classes"]}')
         print(f'class_names: {class_names}')
-    # Define region points
-    half_width = int(frame_width / 2)
-    region_points = [
-        (half_width, 0),
-        (half_width, frame_height),
-    ]
-    # distance_from_center = 10
-    # region_points = [
-    #     (half_width - distance_from_center, 0),
-    #     (half_width + distance_from_center, 0),
-    #     (half_width + distance_from_center, frame_height),
-    #     (half_width - distance_from_center, frame_height),
-    # ]
 
     if parameters['save_video']:
         # Video writer
@@ -57,6 +45,13 @@ def count_objects_(**kwargs) -> dict:
             fps,
             (frame_width, frame_height),
         )
+
+    region_points = utils.define_region_points(
+        region_type=parameters['region_type'],
+        frame_width=frame_width,
+        frame_height=frame_height,
+        x_distance_from_center=parameters['x_distance_from_center'],
+    )
 
     # Init Object Counter
     counter = object_counter.ObjectCounter()
