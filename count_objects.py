@@ -2,8 +2,8 @@ from ultralytics import YOLO
 from ultralytics.solutions import object_counter
 import cv2
 
-import global_constants
 import utils
+import global_constants
 from import_args import args
 
 
@@ -26,6 +26,7 @@ def count_objects_(**kwargs) -> dict:
     # dict mapping class_id to class_name
     class_names_dict = model.names
     # print(class_names_dict)
+    # exit()
     if parameters['verbose']:
         print(f'video_path: {video_path}')
         print(f'width: {frame_width}, height: {frame_height}, fps: {fps}')
