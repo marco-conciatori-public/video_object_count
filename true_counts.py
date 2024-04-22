@@ -40,8 +40,8 @@ by_file_name = {
         'right_to_left': 8,
         'left_to_right': 0,
         'class_wise_count': {
-            'perso': {'right_to_left': 4, 'left_to_right': 0},
             'motorcycle': {'right_to_left': 4, 'left_to_right': 0},
+            'perso': {'right_to_left': 4, 'left_to_right': 0},
         },
     },
     '02250143.mp4': {

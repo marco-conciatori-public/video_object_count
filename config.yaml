@@ -2,8 +2,9 @@ verbose: True
 #video_name: vehicle-counting.mp4
 #video_name: 01270009.mp4 # persone
 #video_name: 02040042.mp4 # persone + cani
-video_name: 02180090.mp4 # moto
+#video_name: 01250003.mp4 # lupo
 #video_name: 02250143.mp4 # cane
+video_name: 02180090.mp4 # moto
 model_name: yolov8x.pt
 # class_ids of interest
 selected_classes: [
