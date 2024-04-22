@@ -3,6 +3,7 @@ verbose: True
 #video_name: 01270009.mp4 # persone
 #video_name: 02040042.mp4 # persone + cani
 video_name: 02180090.mp4 # moto
+#video_name: 02250143.mp4 # cane
 model_name: yolov8x.pt
 # class_ids of interest
 selected_classes: [
@@ -11,6 +12,7 @@ selected_classes: [
   2, # car
   3, # motorcycle
   5, # bus
+  16, # dog
 ]
 
 save_video: True
