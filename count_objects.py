@@ -1,5 +1,6 @@
 from ultralytics import YOLO
 from ultralytics.solutions import object_counter
+from pathlib import Path
 import cv2
 
 import utils
@@ -37,9 +38,9 @@ def count_objects_(**kwargs) -> dict:
 
     if parameters['save_video']:
         # Video writer
-        output_path = global_constants.OUTPUT_FOLDER + 'counting_result_' + parameters['video_name']
         output_path = (global_constants.OUTPUT_FOLDER + 'counting_result_' +
                        parameters['video_folder'] + parameters['video_name'])
+        Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         fourcc_code = cv2.VideoWriter_fourcc(*'mp4v')
         video_writer = cv2.VideoWriter(
             output_path,
