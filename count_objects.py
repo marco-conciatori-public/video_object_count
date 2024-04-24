@@ -59,11 +59,12 @@ def count_objects_(**kwargs) -> dict:
     # Init Object Counter
     counter = object_counter.ObjectCounter()
     counter.set_args(
-        view_img=False,
-        reg_pts=region_points,
         classes_names=class_names_dict,
+        reg_pts=region_points,
+        view_img=False,
         draw_tracks=False,
         line_dist_thresh=parameters['line_dist_thresh'],
+        # cls_txtdisplay_gap=parameters['cls_txtdisplay_gap'],
     )
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     while cap.isOpened():

@@ -7,6 +7,7 @@ video_name: 02040042.mp4 # persone + cani
 #video_name: 01250003.mp4 # lupo
 #video_name: 02250143.mp4 # cane
 #video_name: 02180090.mp4 # moto
+#video_name: 2024_04_23_09_48_002.mp4
 model_name: yolov8x.pt
 # class_ids of interest
 selected_classes: [
@@ -36,3 +37,4 @@ region_type: vertical_line
 x_distance_from_center: 100
 # Euclidean distance from the line from which an object is counted
 line_dist_thresh: 40
+#cls_txtdisplay_gap: 1000
