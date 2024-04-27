@@ -1,3 +1,7 @@
+import torch
+import warnings
+
+
 def show_difference_dicts(true: dict, predicted: dict, level=0):
     for key in true.keys():
         print('  ' * level + key)
@@ -35,3 +39,16 @@ def define_region_points(region_type: str,
     else:
         raise ValueError(f'Invalid region_points type: {region_type}')
     return region_points
+
+
+def get_available_device(verbose: int = 0) -> torch.device:
+    if not torch.cuda.is_available():
+        warnings.warn('GPU not found, using CPU')
+        device = torch.device('cpu')
+    else:
+        device = torch.device('cuda:0')
+
+    if verbose >= 1:
+        print(f'Device: {device}')
+
+    return device
