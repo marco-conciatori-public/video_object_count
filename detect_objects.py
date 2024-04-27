@@ -13,7 +13,7 @@ def detect_objects_(**kwargs):
     model = YOLO(model=model_path, verbose=parameters['verbose'])
 
     # Load video
-    video_path = global_constants.DATA_FOLDER + parameters['video_folder'] + 'argo_2.mp4'
+    video_path = global_constants.DATA_FOLDER + parameters['video_folder'] + 'argo_1.mp4'
 
     # Device (cpu or gpu)
     device = utils.get_available_device(verbose=parameters['verbose'])
@@ -23,7 +23,13 @@ def detect_objects_(**kwargs):
         print(f'device: {device}')
         print(f'model: {parameters["model_name"]}')
 
-    results = model(video_path, device=device, save=parameters['save_video'])
+    results = model(
+        source=video_path,
+        device=device,
+        save=parameters['save_video'],
+        # show=True,
+        project=global_constants.OUTPUT_FOLDER + 'detections/',
+    )
 
 
 if __name__ == '__main__':
