@@ -1,5 +1,6 @@
 verbose: True
 video_folder: pna/
+#video_folder: test_detection/
 #video_folder: initial/
 #video_name: vehicle-counting.mp4
 #video_name: 01270009.mp4 # persone

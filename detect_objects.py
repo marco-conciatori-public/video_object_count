@@ -7,13 +7,14 @@ from import_args import args
 
 def detect_objects_(**kwargs):
     parameters = args.import_and_check(global_constants.CONFIG_PARAMETER_PATH, **kwargs)
+    video_name = 'argo_1.mp4'
 
     # Download model in "models" folder if not present, and load it
     model_path = global_constants.MODEL_FOLDER + parameters['model_name']
     model = YOLO(model=model_path, verbose=parameters['verbose'])
 
     # Load video
-    video_path = global_constants.DATA_FOLDER + parameters['video_folder'] + 'argo_1.mp4'
+    video_path = global_constants.DATA_FOLDER + parameters['video_folder'] + video_name
 
     # Device (cpu or gpu)
     device = utils.get_available_device(verbose=parameters['verbose'])
