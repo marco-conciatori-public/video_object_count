@@ -9,6 +9,9 @@ import global_constants as gc
 
 
 def count_objects_(**kwargs) -> dict:
+    # IN means object moving right to left
+    # OUT means object moving left to right
+
     parameters = args.import_and_check(gc.CONFIG_PARAMETER_PATH, **kwargs)
 
     # Download model in "models" folder if not present, and load it
@@ -111,6 +114,4 @@ def count_objects_(**kwargs) -> dict:
 
 
 if __name__ == '__main__':
-    # IN means object moving right to left
-    # OUT means object moving left to right
     counts = count_objects_()

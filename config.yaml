@@ -31,7 +31,8 @@ selected_classes: [
 
 save_video: True
 
-# Object Counter
+# Object Counter parameters
+
 # define region points
 region_type: vertical_line
 #region_points: rectangle
