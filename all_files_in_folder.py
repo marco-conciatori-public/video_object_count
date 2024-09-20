@@ -12,7 +12,7 @@ def all_files_in_folder_(**kwargs) -> dict:
     parameters['verbose'] = False
     video_path = gc.DATA_FOLDER + parameters['video_folder']
     total_count = {}
-    for file_path in Path(video_path).rglob('*.mp4'):
+    for file_path in Path(video_path).rglob(f'*.{gc.VIDEO_FORMAT}'):
         parameters['video_name'] = file_path.name
         predicted_counts = count_objects.count_objects_(**parameters)
         if local_verbose:
