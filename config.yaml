@@ -1,4 +1,5 @@
 verbose: True
+output_on_file: True
 video_folder: pna/
 #video_folder: test_detection/
 #video_folder: initial/

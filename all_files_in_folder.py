@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import count_objects
@@ -16,12 +17,18 @@ def all_files_in_folder_(**kwargs) -> dict:
         parameters['video_name'] = file_path.name
         predicted_counts = count_objects.count_objects_(**parameters)
         if local_verbose:
-            print(f'file number {file_counter} ("{file_path.name}")')
-            print(f'\tpredicted_counts: {predicted_counts}')
-            print('--------------------------------------------------')
+            if not parameters['output_on_file']:
+                print(f'file number {file_counter} ("{file_path.name}")')
+                print(f'\tpredicted_counts: {predicted_counts}')
+                print('--------------------------------------------------')
         file_counter += 1
         total_count[file_path.name] = predicted_counts
 
+    if parameters['output_on_file']:
+        output_path = gc.OUTPUT_FOLDER + 'counting_result_' + parameters['video_folder']
+        Path(output_path).mkdir(parents=True, exist_ok=True)
+        with open(output_path + 'Total_counts.json', 'w') as json_file:
+            json.dump(total_count, json_file)
     return total_count
 
 
