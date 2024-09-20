@@ -92,18 +92,14 @@ def count_objects_(**kwargs) -> dict:
             video_writer.write(im0)
 
     # convert 'in' and 'out' counts to 'right_to_left' and 'left_to_right' counts
-    object_counts = {
-        'right_to_left': counter.in_counts,
-        'left_to_right': counter.out_counts,
-        'class_wise_count': {class_name: {'right_to_left': 0, 'left_to_right': 0} for class_name in counter.class_wise_count},
-    }
+    object_counts = {}
+    for class_name in parameters['selected_classes']:
+        object_counts[class_names_dict[class_name]] = 0
     for class_name in counter.class_wise_count:
-        object_counts['class_wise_count'][class_name]['right_to_left'] = counter.class_wise_count[class_name]['in']
-        object_counts['class_wise_count'][class_name]['left_to_right'] = counter.class_wise_count[class_name]['out']
+        count_by_class = counter.class_wise_count[class_name]
+        object_counts[class_name] = count_by_class['OUT'] + count_by_class['IN']
     if parameters['verbose']:
-        print(f'in_counts: {counter.in_counts}')
-        print(f'out_counts: {counter.out_counts}')
-        print(f'class_wise_count: {counter.class_wise_count}')
+        print(f'object_counts: {object_counts}')
     cap.release()
     cv2.destroyAllWindows()
     if parameters['save_video']:
