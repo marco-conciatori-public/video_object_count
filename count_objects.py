@@ -1,22 +1,22 @@
+import cv2
+from pathlib import Path
 from ultralytics import YOLO
 from ultralytics.solutions import object_counter
-from pathlib import Path
-import cv2
 
 import utils
-import global_constants
 from import_args import args
+import global_constants as gc
 
 
 def count_objects_(**kwargs) -> dict:
-    parameters = args.import_and_check(global_constants.CONFIG_PARAMETER_PATH, **kwargs)
+    parameters = args.import_and_check(gc.CONFIG_PARAMETER_PATH, **kwargs)
 
     # Download model in "models" folder if not present, and load it
-    model_path = global_constants.MODEL_FOLDER + parameters['model_name']
+    model_path = gc.MODEL_FOLDER + parameters['model_name']
     model = YOLO(model=model_path, verbose=parameters['verbose'])
 
     # Load video
-    video_path = global_constants.DATA_FOLDER + parameters['video_folder'] + parameters['video_name']
+    video_path = gc.DATA_FOLDER + parameters['video_folder'] + parameters['video_name']
     cap = cv2.VideoCapture(video_path)
     assert cap.isOpened(), f'could not open file "{video_path}"'
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -38,8 +38,7 @@ def count_objects_(**kwargs) -> dict:
 
     if parameters['save_video']:
         # Video writer
-        output_path = (global_constants.OUTPUT_FOLDER + 'counting_result_' +
-                       parameters['video_folder'] + parameters['video_name'])
+        output_path = (gc.OUTPUT_FOLDER + 'counting_result_' + parameters['video_folder'] + parameters['video_name'])
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         fourcc_code = cv2.VideoWriter_fourcc(*'mp4v')
         video_writer = cv2.VideoWriter(

@@ -2,15 +2,15 @@ from pathlib import Path
 
 import count_objects
 from import_args import args
-import global_constants
+import global_constants as gc
 
 
 def all_files_in_folder_(**kwargs) -> dict:
     file_counter = 0
-    parameters = args.import_and_check(global_constants.CONFIG_PARAMETER_PATH, **kwargs)
+    parameters = args.import_and_check(gc.CONFIG_PARAMETER_PATH, **kwargs)
     local_verbose = parameters['verbose']
     parameters['verbose'] = False
-    video_path = global_constants.DATA_FOLDER + parameters['video_folder']
+    video_path = gc.DATA_FOLDER + parameters['video_folder']
     total_count = {}
     for file_path in Path(video_path).rglob('*.mp4'):
         parameters['video_name'] = file_path.name
