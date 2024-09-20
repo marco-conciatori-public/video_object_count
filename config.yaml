@@ -1,19 +1,13 @@
 ## OUTPUT
 verbose: True
-save_video: True
+save_video: False
 output_on_file: True
 
 ## INPUT
 video_folder: pna/
-#video_folder: test_detection/
-#video_folder: initial/
-#video_name: vehicle-counting.mp4
-#video_name: 01270009.mp4 # persone
+#video_folder: C:\Users\conci\OneDrive - Università degli Studi di Parma\UNIPR\DOTTORATO\Bandi\Humanita\Object Counting\bismantova bosco rinominati+mp4/
 video_name: 02040042.mp4 # persone + cani
-#video_name: 01250003.mp4 # lupo
-#video_name: 02250143.mp4 # cane
-#video_name: 02180090.mp4 # moto
-#video_name: 2024_04_23_09_48_002.mp4
+
 model_name: yolov9e.pt
 # class_ids of interest
 selected_classes: [
