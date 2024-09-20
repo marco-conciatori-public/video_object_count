@@ -1,5 +1,9 @@
+## OUTPUT
 verbose: True
+save_video: True
 output_on_file: True
+
+## INPUT
 video_folder: pna/
 #video_folder: test_detection/
 #video_folder: initial/
@@ -30,10 +34,7 @@ selected_classes: [
 #  23, # giraffe
 ]
 
-save_video: True
-
-# Object Counter parameters
-
+## OBJECT COUNTER PARAMETERS
 # define region points
 region_type: vertical_line
 #region_points: rectangle

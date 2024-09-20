@@ -75,7 +75,8 @@ def count_objects_(**kwargs) -> dict:
                 print(f'\tProgress: {round(cap.get(cv2.CAP_PROP_POS_FRAMES) / total_frames * 100, 1)} %')
         success, im0 = cap.read()
         if not success:
-            print(f'\tProgress: {round(cap.get(cv2.CAP_PROP_POS_FRAMES) / total_frames * 100, 1)} %')
+            if parameters['verbose']:
+                print(f'\tProgress: {round(cap.get(cv2.CAP_PROP_POS_FRAMES) / total_frames * 100, 1)} %')
             # print("Video frame is empty or video processing has been successfully completed.")
             break
 
