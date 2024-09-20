@@ -4,8 +4,8 @@ save_video: False
 output_on_file: True
 
 ## INPUT
-video_folder: pna/
-#video_folder: C:\Users\conci\OneDrive - Università degli Studi di Parma\UNIPR\DOTTORATO\Bandi\Humanita\Object Counting\bismantova bosco rinominati+mp4/
+#video_folder: pna/
+video_folder: bismantova bosco/
 video_name: 02040042.mp4 # persone + cani
 
 #model_name: yolov8x.pt
