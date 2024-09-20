@@ -9,7 +9,7 @@ video_name: 02040042.mp4 # persone + cani
 #video_name: 02250143.mp4 # cane
 #video_name: 02180090.mp4 # moto
 #video_name: 2024_04_23_09_48_002.mp4
-model_name: yolov8x.pt
+model_name: yolov9e.pt
 # class_ids of interest
 selected_classes: [
   0, # person
