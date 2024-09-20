@@ -17,8 +17,8 @@ def all_files_in_folder_(**kwargs) -> dict:
         parameters['video_name'] = file_path.name
         predicted_counts = count_objects.count_objects_(**parameters)
         if local_verbose:
+            print(f'file number {file_counter} ("{file_path.name}")')
             if not parameters['output_on_file']:
-                print(f'file number {file_counter} ("{file_path.name}")')
                 print(f'\tpredicted_counts: {predicted_counts}')
                 print('--------------------------------------------------')
         file_counter += 1

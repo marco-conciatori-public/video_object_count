@@ -8,6 +8,7 @@ video_folder: pna/
 #video_folder: C:\Users\conci\OneDrive - Università degli Studi di Parma\UNIPR\DOTTORATO\Bandi\Humanita\Object Counting\bismantova bosco rinominati+mp4/
 video_name: 02040042.mp4 # persone + cani
 
+#model_name: yolov8x.pt
 model_name: yolov9e.pt
 # class_ids of interest
 selected_classes: [
