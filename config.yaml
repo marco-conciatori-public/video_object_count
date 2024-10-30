@@ -1,15 +1,18 @@
 ## OUTPUT
 verbose: True
-save_video: False
+save_media: False
 output_on_file: True
 
 ## INPUT
-#video_folder: pna/
-video_folder: bismantova bosco/
-video_name: 02040042.mp4 # persone + cani
+input_type: image
+#input_type: video
+#media_folder: pna/
+#media_folder: bismantova bosco/
+media_folder: images/
+media_name: 02040042.mp4 # persone + cani
 
-#model_name: yolov8x.pt
-model_name: yolov9e.pt
+model_name: yolov8x.pt
+#model_name: yolo11x.pt
 # class_ids of interest
 selected_classes: [
   0, # person

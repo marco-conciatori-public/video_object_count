@@ -19,7 +19,7 @@ def count_objects_(**kwargs) -> dict:
     model = YOLO(model=model_path, verbose=parameters['verbose'])
 
     # Load video
-    video_path = gc.DATA_FOLDER + parameters['video_folder'] + parameters['video_name']
+    video_path = gc.DATA_FOLDER + parameters['media_folder'] + parameters['media_name']
     cap = cv2.VideoCapture(video_path)
     assert cap.isOpened(), f'could not open file "{video_path}"'
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -39,9 +39,9 @@ def count_objects_(**kwargs) -> dict:
         selected_class_names = [class_names_dict[class_id] for class_id in parameters['selected_classes']]
         print(f'selected_class_names: {selected_class_names}')
 
-    if parameters['save_video']:
+    if parameters['save_media']:
         # Video writer
-        output_path = (gc.OUTPUT_FOLDER + 'counting_result_' + parameters['video_folder'] + parameters['video_name'])
+        output_path = (gc.OUTPUT_FOLDER + 'counting_result_' + parameters['media_folder'] + parameters['media_name'])
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         fourcc_code = cv2.VideoWriter_fourcc(*'mp4v')
         video_writer = cv2.VideoWriter(
@@ -89,7 +89,7 @@ def count_objects_(**kwargs) -> dict:
         )
 
         im0 = counter.start_counting(im0, tracks)
-        if parameters['save_video']:
+        if parameters['save_media']:
             video_writer.write(im0)
 
     # convert 'in' and 'out' counts to 'right_to_left' and 'left_to_right' counts
@@ -103,7 +103,7 @@ def count_objects_(**kwargs) -> dict:
         print(f'object_counts: {object_counts}')
     cap.release()
     cv2.destroyAllWindows()
-    if parameters['save_video']:
+    if parameters['save_media']:
         video_writer.release()
         if parameters['verbose']:
             print(f'Video saved at: "{output_path}"')
