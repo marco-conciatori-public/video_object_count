@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+import utils
 import count_objects
 from import_args import args
 import global_constants as gc
@@ -10,8 +11,6 @@ import count_objects_from_images
 def all_files_in_folder_(**kwargs) -> dict:
     file_counter = 0
     parameters = args.import_and_check(gc.CONFIG_PARAMETER_PATH, **kwargs)
-    local_verbose = parameters['verbose']
-    parameters['verbose'] = False
     media_path = gc.DATA_FOLDER + parameters['media_folder']
     media_format = gc.IMAGE_FORMAT
     if parameters['input_type'] == 'video':
@@ -24,7 +23,7 @@ def all_files_in_folder_(**kwargs) -> dict:
             predicted_counts = count_objects.count_objects_(**parameters)
         elif parameters['input_type'] == 'image':
             predicted_counts = count_objects_from_images.count_objects_(**parameters)
-        if local_verbose:
+        if parameters["verbose"]:
             print(f'file number {file_counter} ("{file_path.name}")')
             if not parameters['output_on_file']:
                 print(f'\tpredicted_counts: {predicted_counts}')
