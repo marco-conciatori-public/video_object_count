@@ -11,16 +11,15 @@ def count_objects_(**kwargs) -> dict:
 
     # Download model in "models" folder if not present, and load it
     model_path = global_constants.MODEL_FOLDER + parameters['model_name']
-    model = YOLO(model=model_path)
-    parameters['verbose'] = True
+    model = YOLO(model=model_path, verbose=parameters['verbose'])
+    # parameters['verbose'] = True
     # Load image
     image_path = global_constants.DATA_FOLDER + parameters['media_folder'] + parameters['media_name']
 
     # Classes
     # dict mapping class_id to class_name
     class_names_dict = model.names
-    print(class_names_dict)
-    # exit()
+    # print(class_names_dict)
     if parameters['verbose']:
         print(f'image_path: {image_path}')
         print(f'selected_classes: {parameters["selected_classes"]}')
@@ -29,34 +28,22 @@ def count_objects_(**kwargs) -> dict:
         print(f'selected_class_names: {selected_class_names}')
 
     if parameters['save_media']:
-        # Image writer
         output_path = (global_constants.OUTPUT_FOLDER + 'counting_result_' +
                        parameters['media_folder'] + parameters['media_name'])
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
 
-    results = model(image_path)
-    print('_____________________________________________________________')
-    for result in results:
-        boxes = result.boxes  # Boxes object for bounding box outputs
-        if parameters['verbose']:
-            print(f'boxes: {boxes}')
+    results = model(image_path, classes=parameters['selected_classes'])
 
-    print('_____________________________________________________________')
-
-    # if parameters['save_media']:
-    #     result.save(filename="result.jpg")  # save to disk
-    #     if parameters['verbose']:
-    #         print(f'Image saved at: "{output_path}"')
-    #
-    # object_counts = {
-    #     'class_wise_count': {class_name: {'right_to_left': 0, 'left_to_right': 0} for class_name in counter.class_wise_count},
-    # }
-    # for class_name in counter.class_wise_count:
-    #     object_counts['class_wise_count'][class_name] = counter.class_wise_count[class_name]
-    # if parameters['verbose']:
-    #     print(f'class_wise_count: {counter.class_wise_count}')
-
-    # return object_counts
+    object_counts = {}
+    for class_id in parameters['selected_classes']:
+        object_counts[class_names_dict[class_id]] = 0
+    for class_id in results[0].boxes.cls:
+        class_id = int(class_id.item())
+        class_name = class_names_dict[class_id]
+        object_counts[class_name] += 1
+    if parameters['verbose']:
+        print(f'object_counts: {object_counts}')
+    return object_counts
 
 
 if __name__ == '__main__':
