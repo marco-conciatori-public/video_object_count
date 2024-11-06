@@ -98,7 +98,7 @@ def count_objects_(**kwargs) -> dict:
         object_counts[class_names_dict[class_name]] = 0
     for class_name in counter.class_wise_count:
         count_by_class = counter.class_wise_count[class_name]
-        object_counts[class_name] = count_by_class['OUT'] + count_by_class['IN']
+        object_counts[class_name] = count_by_class['out'] + count_by_class['in']
     if parameters['verbose']:
         print(f'object_counts: {object_counts}')
     cap.release()
