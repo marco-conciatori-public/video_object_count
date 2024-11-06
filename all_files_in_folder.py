@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
 
-import utils
 import count_objects
 from import_args import args
 import global_constants as gc
