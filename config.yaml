@@ -7,9 +7,19 @@ output_on_file: True
 ## INPUT
 input_type: image
 #input_type: video
+
 #media_folder: pna/
-#media_folder: bismantova bosco/
-media_folder: images/
+#media_folder: pna/images/
+#media_folder: initial/
+#media_folder: bismantova_bosco/
+#media_folder: bismantova_bosco/images/
+#media_folder: lama_lite/
+#media_folder: lama_lite/images/
+#media_folder: pineta_marmagna/
+media_folder: pineta_marmagna/images/
+#media_folder: lago_santo/
+#media_folder: lago_santo/images/
+
 media_name: 02040042.mp4 # persone + cani
 
 #model_name: yolov8x.pt
