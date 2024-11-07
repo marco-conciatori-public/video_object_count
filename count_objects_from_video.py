@@ -29,7 +29,12 @@ def count_objects_(**kwargs) -> dict:
     # Classes
     # dict mapping class_id to class_name
     class_names_dict = model.names
-    # print(class_names_dict)
+    # print(f'{class_names_dict=}')
+
+    selected_class_names_dict = {}
+    for class_id in parameters['selected_classes']:
+        selected_class_names_dict[class_id] = class_names_dict[class_id]
+    # print(f'{selected_class_names_dict=}')
     selected_class_names = [class_names_dict[class_id] for class_id in parameters['selected_classes']]
     # exit()
     if parameters['verbose']:
@@ -61,7 +66,7 @@ def count_objects_(**kwargs) -> dict:
     # Init Object Counter
     counter = object_counter.ObjectCounter()
     counter.set_args(
-        classes_names=class_names_dict,
+        classes_names=selected_class_names_dict,
         reg_pts=region_points,
         view_img=False,
         draw_tracks=False,
