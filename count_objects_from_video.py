@@ -94,11 +94,25 @@ def count_objects_(**kwargs) -> dict:
 
     # convert 'in' and 'out' counts to 'right_to_left' and 'left_to_right' counts
     object_counts = {}
-    for class_name in parameters['selected_classes']:
-        object_counts[class_names_dict[class_name]] = 0
-    for class_name in counter.class_wise_count:
-        count_by_class = counter.class_wise_count[class_name]
-        object_counts[class_name] = count_by_class['out'] + count_by_class['in']
+    for class_id in parameters['selected_classes']:
+        class_name = class_names_dict[class_id]
+        # print(f'class_id: {class_id}')
+        # print(f'class_name: {class_name}')
+        object_counts[class_name] = 0
+    # print(f'object_counts 1: {object_counts}')
+    for short_class_name in counter.class_wise_count:
+        # print(f'short_class_name: {short_class_name}')
+        count_by_class = counter.class_wise_count[short_class_name]
+        complete_class_name = None
+        for selected_class_name in selected_class_names:
+            if short_class_name in selected_class_name:
+                complete_class_name = selected_class_name
+                break
+        # print(f'complete_class_name: {complete_class_name}')
+        assert complete_class_name is not None, \
+            f'could not find complete class name from shortened class name "{short_class_name}".'
+        object_counts[complete_class_name] = count_by_class['out'] + count_by_class['in']
+    # print(f'object_counts 2: {object_counts}')
     if parameters['verbose']:
         print(f'object_counts: {object_counts}')
     cap.release()
