@@ -20,10 +20,8 @@ def import_and_check(yaml_path, **kwargs) -> dict:
     parameter_dict = from_command_line.update_config(parameter_dict)
     # function arguments have priority over yaml and command line arguments
     parameter_dict = from_function_arguments.update_config(parameter_dict, **kwargs)
-    if parameter_dict['save_media']:
-        assert parameter_dict['video_output_folder'] is not None, \
-            'if "video_output_folder" is True, "output_path" must be provided.'
+    if parameter_dict['save_annotated_video']:
+        assert parameter_dict['video_output_path'] is not None, \
+            'if "save_annotated_video" is True, "video_output_path" must be provided.'
 
-        assert parameter_dict['video_output_name'] is not None, \
-            'if "video_output_folder" is True, "video_output_name" must be provided.'
     return parameter_dict

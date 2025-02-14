@@ -8,6 +8,25 @@ from import_args import args
 
 
 def count_objects(**kwargs) -> dict:
+    """
+    Count objects in a video using a YOLO model.
+    :param kwargs:
+        video_path: str, path to video file.
+        model_folder: str, path to folder containing YOLO model.
+        model_name: str, name of YOLO model.
+        selected_classes: list, list of class_ids of classes to count.
+        region_type: str, type of region to count objects in, only accepts 'rectangle' and 'vertical_line'
+        x_distance_from_center: int, distance from center of frame to define region.
+        line_dist_thresh: int, distance from line to count object.
+        save_annotated_video: bool, whether to save video with yolo detections.
+        video_output_path: str, path to save video with object counts, only required if 'save_annotated_video' is True.
+        verbose: bool, whether to print information.
+
+    :return:
+        dict mapping class_name to count of objects of that class in the video.
+        Es. {'person': 1, 'bicycle': 1, 'car': 0, 'motorcycle': 0, 'bus': 0}
+
+    """
     parameters = args.import_and_check(yaml_path='config.yaml', **kwargs)
 
     # Download model in "models" folder if not present, and load it
@@ -15,7 +34,7 @@ def count_objects(**kwargs) -> dict:
     model = YOLO(model=model_path, verbose=parameters['verbose'])
 
     # Load video
-    video_path = kwargs['video_path']
+    video_path = parameters['video_path']
     cap = cv2.VideoCapture(video_path)
     assert cap.isOpened(), f'could not open file "{video_path}"'
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -38,13 +57,13 @@ def count_objects(**kwargs) -> dict:
         # class names of interest
         print(f'selected_class_names: {selected_class_names}')
 
-    if parameters['save_media']:
-        output_path = parameters['output_path']
+    if parameters['save_annotated_video']:
+        video_output_path = parameters['video_output_path']
         # Video writer
-        Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+        Path(video_output_path).parent.mkdir(parents=True, exist_ok=True)
         fourcc_code = cv2.VideoWriter_fourcc(*'mp4v')
         video_writer = cv2.VideoWriter(
-            output_path,
+            video_output_path,
             fourcc_code,
             fps,
             (frame_width, frame_height),
@@ -87,7 +106,7 @@ def count_objects(**kwargs) -> dict:
         )
 
         im0 = counter.start_counting(im0, tracks)
-        if parameters['save_media']:
+        if parameters['save_annotated_video']:
             video_writer.write(im0)
 
     # convert 'in' and 'out' counts to 'right_to_left' and 'left_to_right' counts
@@ -109,10 +128,10 @@ def count_objects(**kwargs) -> dict:
         print(f'object_counts: {object_counts}')
     cap.release()
     cv2.destroyAllWindows()
-    if parameters['save_media']:
+    if parameters['save_annotated_video']:
         video_writer.release()
         if parameters['verbose']:
-            print(f'Video saved at: "{output_path}"')
+            print(f'Video saved at: "{video_output_path}"')
     return object_counts
 
 
