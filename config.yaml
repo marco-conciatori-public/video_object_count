@@ -1,27 +1,26 @@
+## INTPUT
+
+video_path: null
+
+
 ## OUTPUT
+
 verbose: False
 #verbose: True
 save_media: False
-output_on_file: True
+# folder path to save the output video
+# Path to folder can be absolute or relative to project root
+# It should end with a slash
+# ES: /home/user/output/
+video_output_folder: null
+# name of the output video file
+# The only format supported for now is mp4
+video_output_name: null
 
-## INPUT
-input_type: image
-#input_type: video
 
-#media_folder: pna/
-#media_folder: pna/images/
-#media_folder: initial/
-#media_folder: bismantova_bosco/
-#media_folder: bismantova_bosco/images/
-#media_folder: lama_lite/
-#media_folder: lama_lite/images/
-#media_folder: pineta_marmagna/
-media_folder: pineta_marmagna/images/
-#media_folder: lago_santo/
-#media_folder: lago_santo/images/
+## MODEL
 
-media_name: 02040042.mp4 # persone + cani
-
+model_folder: models/
 #model_name: yolov8x.pt
 model_name: yolov9e.pt
 #model_name: yolo11x.pt
@@ -45,10 +44,10 @@ selected_classes: [
 ]
 
 ## OBJECT COUNTER PARAMETERS
+
 # define region points
 region_type: vertical_line
 #region_points: rectangle
 x_distance_from_center: 100
 # Euclidean distance from the line from which an object is counted
 line_dist_thresh: 40
-#cls_txtdisplay_gap: 1000

@@ -5,21 +5,17 @@ from ultralytics.solutions import object_counter
 
 import utils
 from import_args import args
-import global_constants as gc
 
 
-def count_objects_(**kwargs) -> dict:
-    # IN means object moving right to left
-    # OUT means object moving left to right
-
-    parameters = args.import_and_check(gc.CONFIG_PARAMETER_PATH, **kwargs)
+def count_objects(**kwargs) -> dict:
+    parameters = args.import_and_check(yaml_path='config.yaml', **kwargs)
 
     # Download model in "models" folder if not present, and load it
-    model_path = gc.MODEL_FOLDER + parameters['model_name']
+    model_path = parameters['model_folder'] + parameters['model_name']
     model = YOLO(model=model_path, verbose=parameters['verbose'])
 
     # Load video
-    video_path = gc.DATA_FOLDER + parameters['media_folder'] + parameters['media_name']
+    video_path = kwargs['video_path']
     cap = cv2.VideoCapture(video_path)
     assert cap.isOpened(), f'could not open file "{video_path}"'
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -29,14 +25,12 @@ def count_objects_(**kwargs) -> dict:
     # Classes
     # dict mapping class_id to class_name
     class_names_dict = model.names
-    # print(f'{class_names_dict=}')
 
     selected_class_names_dict = {}
     for class_id in parameters['selected_classes']:
         selected_class_names_dict[class_id] = class_names_dict[class_id]
-    # print(f'{selected_class_names_dict=}')
     selected_class_names = [class_names_dict[class_id] for class_id in parameters['selected_classes']]
-    # exit()
+
     if parameters['verbose']:
         print(f'video_path: {video_path}')
         print(f'width: {frame_width}, height: {frame_height}, fps: {fps}')
@@ -45,8 +39,8 @@ def count_objects_(**kwargs) -> dict:
         print(f'selected_class_names: {selected_class_names}')
 
     if parameters['save_media']:
+        output_path = parameters['output_path']
         # Video writer
-        output_path = (gc.OUTPUT_FOLDER + 'counting_result_' + parameters['media_folder'] + parameters['media_name'])
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         fourcc_code = cv2.VideoWriter_fourcc(*'mp4v')
         video_writer = cv2.VideoWriter(
@@ -71,7 +65,6 @@ def count_objects_(**kwargs) -> dict:
         view_img=False,
         draw_tracks=False,
         line_dist_thresh=parameters['line_dist_thresh'],
-        # cls_txtdisplay_gap=parameters['cls_txtdisplay_gap'],
     )
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     while cap.isOpened():
@@ -101,23 +94,17 @@ def count_objects_(**kwargs) -> dict:
     object_counts = {}
     for class_id in parameters['selected_classes']:
         class_name = class_names_dict[class_id]
-        # print(f'class_id: {class_id}')
-        # print(f'class_name: {class_name}')
         object_counts[class_name] = 0
-    # print(f'object_counts 1: {object_counts}')
     for short_class_name in counter.class_wise_count:
-        # print(f'short_class_name: {short_class_name}')
         count_by_class = counter.class_wise_count[short_class_name]
         complete_class_name = None
         for selected_class_name in selected_class_names:
             if short_class_name in selected_class_name:
                 complete_class_name = selected_class_name
                 break
-        # print(f'complete_class_name: {complete_class_name}')
         assert complete_class_name is not None, \
             f'could not find complete class name from shortened class name "{short_class_name}".'
         object_counts[complete_class_name] = count_by_class['out'] + count_by_class['in']
-    # print(f'object_counts 2: {object_counts}')
     if parameters['verbose']:
         print(f'object_counts: {object_counts}')
     cap.release()
@@ -130,4 +117,4 @@ def count_objects_(**kwargs) -> dict:
 
 
 if __name__ == '__main__':
-    counts = count_objects_()
+    counts = count_objects()
