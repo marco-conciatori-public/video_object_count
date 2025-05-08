@@ -19,7 +19,7 @@ def count_objects_(**kwargs) -> dict:
     model = YOLO(model=model_path, verbose=parameters['verbose'])
 
     # Load video
-    video_path = gc.DATA_FOLDER + parameters['media_folder'] + parameters['media_name']
+    video_path = gc.DATA_FOLDER + parameters['file_folder'] + parameters['file_name']
     cap = cv2.VideoCapture(video_path)
     assert cap.isOpened(), f'could not open file "{video_path}"'
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -46,7 +46,7 @@ def count_objects_(**kwargs) -> dict:
 
     if parameters['save_media']:
         # Video writer
-        output_path = (gc.OUTPUT_FOLDER + 'counting_result_' + parameters['media_folder'] + parameters['media_name'])
+        output_path = (gc.OUTPUT_FOLDER + 'counting_result_' + parameters['file_folder'] + parameters['file_name'])
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         fourcc_code = cv2.VideoWriter_fourcc(*'mp4v')
         video_writer = cv2.VideoWriter(

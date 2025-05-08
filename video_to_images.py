@@ -10,7 +10,7 @@ def convert_(**kwargs):
     error_counter = 0
 
     parameters = args.import_and_check(gc.CONFIG_PARAMETER_PATH, **kwargs)
-    media_path = gc.DATA_FOLDER + parameters['media_folder']
+    media_path = gc.DATA_FOLDER + parameters['file_folder']
     print(f'{media_path=}')
     save_folder_path = media_path + 'images/'
     print(f'{save_folder_path=}')

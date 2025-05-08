@@ -14,7 +14,7 @@ def count_objects_(**kwargs) -> dict:
     model = YOLO(model=model_path, verbose=parameters['verbose'])
     # parameters['verbose'] = True
     # Load image
-    image_path = global_constants.DATA_FOLDER + parameters['media_folder'] + parameters['media_name']
+    image_path = global_constants.DATA_FOLDER + parameters['file_folder'] + parameters['file_name']
 
     # Classes
     # dict mapping class_id to class_name
@@ -29,7 +29,7 @@ def count_objects_(**kwargs) -> dict:
 
     if parameters['save_media']:
         output_path = (global_constants.OUTPUT_FOLDER + 'counting_result_' +
-                       parameters['media_folder'] + parameters['media_name'])
+                       parameters['file_folder'] + parameters['file_name'])
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
 
     results = model(image_path, classes=parameters['selected_classes'])
