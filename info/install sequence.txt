@@ -1,0 +1,4 @@
+conda create -n video_object_count
+conda activate video_object_count
+conda install -c pytorch -c nvidia -c conda-forge pytorch=2.2.2 torchvision=0.17.2 pytorch-cuda=12.1 ultralytics=8.2.0
+conda install numpy=1.26.4
