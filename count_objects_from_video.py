@@ -90,7 +90,7 @@ def count_objects_(**kwargs) -> dict:
             persist=True,
             classes=parameters['selected_classes'],
             # tracker='bytetrack.yaml',
-            conf=parameters['conf'],
+            conf=parameters['confidence'],
             verbose=False,
         )
 

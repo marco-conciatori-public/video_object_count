@@ -13,7 +13,7 @@ file_name: 2023_05_06_20_22_46.mp4
 #model_name: yolov8x.pt
 model_name: yolov9e.pt
 # minimum recognition confidence above which YOLO signals an object
-conf: 0.15
+confidence: 0.15
 # class_ids of interest
 selected_classes: [
   0, # person
