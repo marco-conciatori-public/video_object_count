@@ -273,8 +273,8 @@ class ConfigEditorApp:
         print(">>> TODO: Implement your Python script execution logic here.")
         print(f">>> Config file '{CONFIG_FILE}' has been updated with the latest changes from the UI.")
         print("--- End of placeholder message ---\n")
-        messagebox.showinfo("Run Script",
-                            "Changes saved successfully.\n\n"
+        messagebox.showinfo(title="Run Script",
+                            message="Changes saved successfully.\n\n"
                             "Placeholder for 'run script' executed (see console for details).\n"
                             "You can implement your actual script call in "
                             "'execute_main_script_placeholder' method.")
