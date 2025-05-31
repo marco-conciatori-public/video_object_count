@@ -1,11 +1,14 @@
 import os
+import sys
 import yaml
+import threading
+import subprocess
 import tkinter as tk
+from queue import Queue, Empty
 from tkinter import ttk, messagebox, filedialog
 
 import global_constants as gc
 
-CONFIG_FILE = 'config.yaml'
 
 # --- Define parameters with limited options ---
 # Keys here should match keys in your config.yaml
@@ -57,6 +60,43 @@ def save_config_to_file(file_path, data) -> bool:
         return False
 
 
+# --- Console Redirector ---
+class ConsoleRedirector:
+    def __init__(self, text_widget, queue):
+        self.text_widget = text_widget
+        self.queue = queue
+        self.text_widget.config(state='disabled')  # Make it read-only
+        self.after_id = None
+
+    def write(self, string):
+        self.queue.put(string)
+
+    def flush(self):
+        pass  # Required for file-like objects
+
+    def process_queue(self):
+        try:
+            while True:
+                line = self.queue.get_nowait()
+                self.text_widget.config(state='normal')
+                self.text_widget.insert(tk.END, line)
+                self.text_widget.see(tk.END)
+                self.text_widget.config(state='disabled')
+                self.queue.task_done()
+        except Empty:
+            pass
+        finally:
+            self.after_id = self.text_widget.after(100, self.process_queue)
+
+    def start(self):
+        self.after_id = self.text_widget.after(100, self.process_queue)
+
+    def stop(self):
+        if self.after_id:
+            self.text_widget.after_cancel(self.after_id)
+            self.after_id = None
+
+
 # --- GUI Application ---
 class ConfigEditorApp:
     def __init__(self, root_window):
@@ -66,18 +106,23 @@ class ConfigEditorApp:
         self.initialized_properly = False
         self.config_data = None
         self.entries = {}
+        self.console_output_queue = Queue()
+        self.console_redirector = None
 
-        if not os.path.exists(CONFIG_FILE):
+        if not os.path.exists(gc.CONFIG_PARAMETER_PATH):
             messagebox.showinfo(title="Info", message="Application will close as no config is available.")
             self.root.destroy()
             return
 
         if self.config_data is None:
-            self.config_data = load_config(CONFIG_FILE)
+            self.config_data = load_config(gc.CONFIG_PARAMETER_PATH)
 
         if self.config_data is None:
-            if os.path.exists(CONFIG_FILE):
-                messagebox.showerror(title="Error", message=f"Failed to load '{CONFIG_FILE}'. Check messages or file.")
+            if os.path.exists(gc.CONFIG_PARAMETER_PATH):
+                messagebox.showerror(
+                    title="Error",
+                    message=f"Failed to load '{gc.CONFIG_PARAMETER_PATH}'. Check messages or file.",
+                )
             self.root.destroy()
             return
 
@@ -94,16 +139,22 @@ class ConfigEditorApp:
         self.root.columnconfigure(0, weight=1)
         self.root.rowconfigure(0, weight=1)
 
-        canvas = tk.Canvas(main_frame)
-        scrollbar = ttk.Scrollbar(main_frame, orient="vertical", command=canvas.yview)
+        # Frame for parameters and scrollbar
+        param_frame = ttk.Frame(main_frame)
+        param_frame.grid(row=0, column=0, sticky="nsew")
+        main_frame.rowconfigure(0, weight=3)
+        main_frame.columnconfigure(0, weight=1)
+
+        canvas = tk.Canvas(param_frame)
+        scrollbar = ttk.Scrollbar(param_frame, orient="vertical", command=canvas.yview)
         scrollable_frame = ttk.Frame(canvas)
         scrollable_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
         canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
         canvas.configure(yscrollcommand=scrollbar.set)
         canvas.grid(row=0, column=0, sticky="nsew")
         scrollbar.grid(row=0, column=1, sticky="ns")
-        main_frame.rowconfigure(0, weight=1)
-        main_frame.columnconfigure(0, weight=1)
+        param_frame.rowconfigure(0, weight=1)
+        param_frame.columnconfigure(0, weight=1)
 
         row_idx = 0
         if not self.config_data:
@@ -172,6 +223,7 @@ class ConfigEditorApp:
                 row_idx += 1
         scrollable_frame.columnconfigure(index=1, weight=1)
 
+        # Button frame
         button_frame = ttk.Frame(main_frame)
         button_frame.grid(row=1, column=0, columnspan=2, pady=10, sticky=tk.E)
 
@@ -182,19 +234,35 @@ class ConfigEditorApp:
             padx=15,
         )  # More padding
 
+        # Console output frame
+        console_frame = ttk.LabelFrame(main_frame, text="Script Output", padding="5")
+        console_frame.grid(row=2, column=0, sticky="nsew", padx=10, pady=5)
+        main_frame.rowconfigure(2, weight=1)
+
+        self.console_text = tk.Text(
+            console_frame,
+            wrap=tk.WORD,
+            height=10,
+            bg="black",
+            fg="lightgray",
+            font=("Consolas", 10)
+        )
+        self.console_text.pack(expand=True, fill="both")
+
+        console_scrollbar = ttk.Scrollbar(console_frame, command=self.console_text.yview)
+        console_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.console_text.config(yscrollcommand=console_scrollbar.set)
+
+        self.console_redirector = ConsoleRedirector(self.console_text, self.console_output_queue)
+        self.console_redirector.start()  # Start processing output
+
     def _select_path(self, key, path_var):
         """Opens a file/directory dialog and updates the path_var."""
         path_type = PATH_PARAMETERS.get(key)
         if path_type == 'directory':
-            selected_path = filedialog.askdirectory(
-                title=f'Select "{key}" Directory',
-                initialdir=gc.DATA_FOLDER,
-            )
+            selected_path = filedialog.askdirectory(title=f"Select {key} Directory", initialdir=gc.DATA_FOLDER)
         elif path_type == 'file':
-            selected_path = filedialog.askopenfilename(
-                title=f'Select "{key}" File',
-                initialdir=gc.DATA_FOLDER,
-            )
+            selected_path = filedialog.askopenfilename(title=f"Select {key} File", initialdir=gc.DATA_FOLDER)
         else:
             selected_path = None
 
@@ -252,7 +320,7 @@ class ConfigEditorApp:
                                      f"Original type: {type(original_value_in_config).__name__}.\nError: {e}")
                 return False  # Stop saving
 
-        if save_config_to_file(CONFIG_FILE, updated_config):  # Use the global save function
+        if save_config_to_file(gc.CONFIG_PARAMETER_PATH, updated_config):  # Use the global save function
             self.config_data = updated_config  # Update in-memory config
             return True
         return False
@@ -262,23 +330,70 @@ class ConfigEditorApp:
 
     def save_and_run(self):
         if self._perform_save():  # If save was successful
-            self.execute_main_script_placeholder()
+            self.execute_main_script()
 
     def discard_and_exit(self):
+        if self.console_redirector:
+            self.console_redirector.stop()
         self.root.destroy()
 
-    def execute_main_script_placeholder(self):
-        # This is the dummy function you will implement later, Marco.
-        # It's called after 'Save Changes and Run' if saving was successful.
-        print("\n--- Configuration Editor: 'execute_main_script_placeholder' CALLED ---")
-        print(">>> TODO: Implement your Python script execution logic here.")
-        print(f">>> Config file '{CONFIG_FILE}' has been updated with the latest changes from the UI.")
-        print("--- End of placeholder message ---\n")
-        messagebox.showinfo(title="Run Script",
-                            message="Changes saved successfully.\n\n"
-                            "Placeholder for 'run script' executed (see console for details).\n"
-                            "You can implement your actual script call in "
-                            "'execute_main_script_placeholder' method.")
+    def execute_main_script(self):
+        self.console_text.config(state='normal')
+        self.console_text.delete(1.0, tk.END)  # Clear previous output
+        self.console_text.config(state='disabled')
+        self.console_output_queue.queue.clear()  # Clear any pending queue items
+
+        self.console_redirector.write("--- Starting all_files_in_folder.py.py ---\n")
+        # Run the script in a separate thread to keep GUI responsive
+        threading.Thread(target=self._run_script_in_thread).start()
+
+    def _run_script_in_thread(self):
+        try:
+            # Construct the command to run your script
+            # We assume all_files_in_folder.py.py is in the same directory
+            script_path = "all_files_in_folder.py.py"
+            if not os.path.exists(script_path):
+                self.console_redirector.write(f"Error: Script '{script_path}' not found!\n")
+                return
+
+            # Example: Running the script with python executable
+            # You might need to add arguments based on how your script uses the config.yaml
+            command = [sys.executable, script_path]  # Use sys.executable to ensure correct python env
+
+            # For now, we'll just run it. If all_files_in_folder.py.py needs
+            # to read config.yaml directly, ensure it loads it when run.
+            # If you want to pass parameters directly as command line args,
+            # you'd construct `command` like:
+            # command = [sys.executable, script_path, "--config", gc.CONFIG_PARAMETER_PATH, "--output", self.config_data.get('output_directory', '')]
+            # ... and so on for other parameters your script might expect.
+
+            # Redirect stdout and stderr to the Popen object's pipes
+            process = subprocess.Popen(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,  # Decode stdout/stderr as text
+                bufsize=1,  # Line-buffered output
+                universal_newlines=True  # Ensure consistent newline handling
+            )
+
+            # Read output line by line and put into queue
+            for line in iter(process.stdout.readline, ''):
+                self.console_redirector.write(line)
+            for line in iter(process.stderr.readline, ''):
+                self.console_redirector.write(f"ERROR: {line}")  # Differentiate stderr
+
+            process.stdout.close()
+            process.stderr.close()
+            return_code = process.wait()
+
+            if return_code == 0:
+                self.console_redirector.write("\n--- Script Finished Successfully ---\n")
+            else:
+                self.console_redirector.write(f"\n--- Script Exited with Error (Code: {return_code}) ---\n")
+
+        except Exception as e:
+            self.console_redirector.write(f"\n--- An unexpected error occurred while running the script: {e} ---\n")
 
 
 def main_gui():
@@ -289,8 +404,8 @@ def main_gui():
 
 
 if __name__ == '__main__':
-    if not os.path.exists(CONFIG_FILE):
-        print(f"'{CONFIG_FILE}' not found.")
+    if not os.path.exists(gc.CONFIG_PARAMETER_PATH):
+        print(f"'{gc.CONFIG_PARAMETER_PATH}' not found.")
         exit()
 
     main_gui()
