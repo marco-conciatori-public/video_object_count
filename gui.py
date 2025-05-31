@@ -101,9 +101,9 @@ class ConsoleRedirector:
 class ConfigEditorApp:
     def __init__(self, root_window):
         self.root = root_window
-        self.root.title("YAML Configuration Editor")
+        self.root.title("YOLO Object Counter")
         # initial window size
-        self.root.geometry("650x750")
+        self.root.geometry("650x780")
         self.initialized_properly = False
         self.config_data = None
         self.entries = {}
