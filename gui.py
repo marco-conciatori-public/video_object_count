@@ -53,7 +53,7 @@ def save_config_to_file(file_path, data) -> bool:
     try:
         with open(file_path, 'w', encoding='utf-8') as f:
             yaml.dump(data, f, default_flow_style=False, sort_keys=False)
-        messagebox.showinfo(title="Success", message=f"Configuration saved successfully to '{file_path}'!")
+        # messagebox.showinfo(title="Success", message=f"Configuration saved successfully to '{file_path}'!")
         return True
     except Exception as e:
         messagebox.showerror(title="Save Error", message=f"Failed to save config to '{file_path}':\n{e}")
