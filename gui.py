@@ -109,6 +109,7 @@ class ConfigEditorApp:
         self.entries = {}
         self.console_output_queue = Queue()
         self.console_redirector = None
+        self.console_text = None
 
         if not os.path.exists(gc.CONFIG_PARAMETER_PATH):
             messagebox.showinfo(title="Info", message="Application will close as no config is available.")
@@ -154,8 +155,8 @@ class ConfigEditorApp:
         canvas.configure(yscrollcommand=scrollbar.set)
         canvas.grid(row=0, column=0, sticky="nsew")
         scrollbar.grid(row=0, column=1, sticky="ns")
-        param_frame.rowconfigure(0, weight=1)
-        param_frame.columnconfigure(0, weight=1)
+        param_frame.rowconfigure(index=0, weight=1)
+        param_frame.columnconfigure(index=0, weight=1)
 
         row_idx = 0
         if not self.config_data:
@@ -255,9 +256,10 @@ class ConfigEditorApp:
         self.console_text.config(yscrollcommand=console_scrollbar.set)
 
         self.console_redirector = ConsoleRedirector(self.console_text, self.console_output_queue)
-        self.console_redirector.start()  # Start processing output
+        self.console_redirector.start()
 
-    def _select_path(self, key, path_var):
+    @staticmethod
+    def _select_path(key, path_var):
         """Opens a file/directory dialog and updates the path_var."""
         path_type = PATH_PARAMETERS.get(key)
         if path_type == 'directory':
@@ -281,7 +283,7 @@ class ConfigEditorApp:
             try:
                 if isinstance(stored_item, tk.BooleanVar):
                     updated_config[key] = stored_item.get()
-                elif isinstance(stored_item, tuple) and isinstance(stored_item[0], tk.StringVar):  # Combobox
+                elif isinstance(stored_item, tuple) and isinstance(stored_item[0], tk.StringVar):
                     combo_var, original_options = stored_item
                     selected_str_value = combo_var.get()
                     value_found = False
@@ -330,7 +332,7 @@ class ConfigEditorApp:
         self._perform_save()
 
     def save_and_run(self):
-        if self._perform_save():  # If save was successful
+        if self._perform_save():
             self.execute_main_script()
 
     def discard_and_exit(self):
@@ -365,7 +367,13 @@ class ConfigEditorApp:
             # to read config.yaml directly, ensure it loads it when run.
             # If you want to pass parameters directly as command line args,
             # you'd construct `command` like:
-            # command = [sys.executable, script_path, "--config", gc.CONFIG_PARAMETER_PATH, "--output", self.config_data.get('output_directory', '')]
+            # command = [sys.executable,
+            #            script_path,
+            #            "--config",
+            #            gc.CONFIG_PARAMETER_PATH,
+            #            "--output",
+            #            self.config_data.get('output_directory', ''),
+            #            ]
             # ... and so on for other parameters your script might expect.
 
             # Redirect stdout and stderr to the Popen object's pipes
