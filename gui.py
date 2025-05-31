@@ -41,10 +41,10 @@ def load_config(file_path):
             return {}
         return config
     except yaml.YAMLError as e:
-        messagebox.showerror("YAML Error", f"Error parsing YAML file '{file_path}':\n{e}")
+        messagebox.showerror(title="YAML Error", message=f"Error parsing YAML file '{file_path}':\n{e}")
         return None
     except Exception as e:
-        messagebox.showerror("Load Error", f"Failed to load config from '{file_path}':\n{e}")
+        messagebox.showerror(title="Load Error", message=f"Failed to load config from '{file_path}':\n{e}")
         return None
 
 
@@ -138,14 +138,14 @@ class ConfigEditorApp:
 
         main_frame = ttk.Frame(self.root, padding="10")
         main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
-        self.root.columnconfigure(0, weight=1)
-        self.root.rowconfigure(0, weight=1)
+        self.root.columnconfigure(index=0, weight=1)
+        self.root.rowconfigure(index=0, weight=1)
 
         # Frame for parameters and scrollbar
         param_frame = ttk.Frame(main_frame)
         param_frame.grid(row=0, column=0, sticky="nsew")
-        main_frame.rowconfigure(0, weight=3)
-        main_frame.columnconfigure(0, weight=1)
+        main_frame.rowconfigure(index=0, weight=3)
+        main_frame.columnconfigure(index=0, weight=1)
 
         canvas = tk.Canvas(param_frame)
         scrollbar = ttk.Scrollbar(param_frame, orient="vertical", command=canvas.yview)
@@ -226,20 +226,19 @@ class ConfigEditorApp:
         scrollable_frame.columnconfigure(index=1, weight=1)
 
         # Button frame
-        button_frame = ttk.Frame(main_frame)
-        button_frame.grid(row=1, column=0, columnspan=2, pady=10, sticky=tk.E)
+        button_frame_east = ttk.Frame(main_frame)
+        button_frame_west = ttk.Frame(main_frame)
+        button_frame_east.grid(row=1, column=0, columnspan=2, pady=10, sticky=tk.E)
+        button_frame_west.grid(row=1, column=0, columnspan=2, pady=10, sticky=tk.W)
 
-        ttk.Button(button_frame, text="Save Changes", command=self.save_only).pack(side=tk.LEFT, padx=5)
-        ttk.Button(button_frame, text="Save Changes and Run", command=self.save_and_run).pack(side=tk.LEFT, padx=5)
-        ttk.Button(button_frame, text="Discard Changes and Exit", command=self.discard_and_exit).pack(
-            side=tk.LEFT,
-            padx=15,
-        )  # More padding
+        ttk.Button(button_frame_west, text="Exit", command=self.discard_and_exit).pack(side=tk.LEFT, padx=10)
+        ttk.Button(button_frame_east, text="Save & Run", command=self.save_and_run).pack(side=tk.RIGHT, padx=20)
+        ttk.Button(button_frame_east, text="Save", command=self.save_only).pack(side=tk.LEFT)
 
         # Console output frame
-        console_frame = ttk.LabelFrame(main_frame, text="Script Output", padding="5")
-        console_frame.grid(row=2, column=0, sticky="nsew", padx=10, pady=5)
-        main_frame.rowconfigure(2, weight=1)
+        console_frame = ttk.LabelFrame(main_frame, text="Console Output", padding="5")
+        console_frame.grid(row=2, column=0, sticky="nsew", pady=5)
+        main_frame.rowconfigure(index=2, weight=1)
 
         self.console_text = tk.Text(
             console_frame,
@@ -323,7 +322,7 @@ class ConfigEditorApp:
                                      f"Original type: {type(original_value_in_config).__name__}.\nError: {e}")
                 return False  # Stop saving
 
-        if save_config_to_file(gc.CONFIG_PARAMETER_PATH, updated_config):  # Use the global save function
+        if save_config_to_file(gc.CONFIG_PARAMETER_PATH, updated_config):
             self.config_data = updated_config  # Update in-memory config
             return True
         return False
@@ -362,19 +361,6 @@ class ConfigEditorApp:
             # Example: Running the script with python executable
             # You might need to add arguments based on how your script uses the config.yaml
             command = [sys.executable, script_path]  # Use sys.executable to ensure correct python env
-
-            # For now, we'll just run it. If all_files_in_folder.py.py needs
-            # to read config.yaml directly, ensure it loads it when run.
-            # If you want to pass parameters directly as command line args,
-            # you'd construct `command` like:
-            # command = [sys.executable,
-            #            script_path,
-            #            "--config",
-            #            gc.CONFIG_PARAMETER_PATH,
-            #            "--output",
-            #            self.config_data.get('output_directory', ''),
-            #            ]
-            # ... and so on for other parameters your script might expect.
 
             # Redirect stdout and stderr to the Popen object's pipes
             process = subprocess.Popen(
