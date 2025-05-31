@@ -102,7 +102,8 @@ class ConfigEditorApp:
     def __init__(self, root_window):
         self.root = root_window
         self.root.title("YAML Configuration Editor")
-        self.root.geometry("600x480")
+        # initial window size
+        self.root.geometry("650x750")
         self.initialized_properly = False
         self.config_data = None
         self.entries = {}
