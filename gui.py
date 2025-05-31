@@ -103,7 +103,7 @@ class ConfigEditorApp:
         self.root = root_window
         self.root.title("YOLO Object Counter")
         # initial window size
-        self.root.geometry("650x780")
+        self.root.geometry("610x800")
         self.initialized_properly = False
         self.config_data = None
         self.entries = {}
@@ -141,10 +141,14 @@ class ConfigEditorApp:
         self.root.columnconfigure(index=0, weight=1)
         self.root.rowconfigure(index=0, weight=1)
 
+        ttk.Label(main_frame, text="Parameter configuration", font=("Segoe UI", 12, "bold")).grid(
+            row=0, column=0, sticky=tk.W, pady=(0, 5), padx=5
+        )
+
         # Frame for parameters and scrollbar
         param_frame = ttk.Frame(main_frame)
-        param_frame.grid(row=0, column=0, sticky="nsew")
-        main_frame.rowconfigure(index=0, weight=3)
+        param_frame.grid(row=1, column=0, sticky="nsew")
+        main_frame.rowconfigure(index=1, weight=3)
         main_frame.columnconfigure(index=0, weight=1)
 
         canvas = tk.Canvas(param_frame)
@@ -228,8 +232,8 @@ class ConfigEditorApp:
         # Button frame
         button_frame_east = ttk.Frame(main_frame)
         button_frame_west = ttk.Frame(main_frame)
-        button_frame_east.grid(row=1, column=0, columnspan=2, pady=10, sticky=tk.E)
-        button_frame_west.grid(row=1, column=0, columnspan=2, pady=10, sticky=tk.W)
+        button_frame_east.grid(row=2, column=0, columnspan=2, pady=10, sticky=tk.E)
+        button_frame_west.grid(row=2, column=0, columnspan=2, pady=10, sticky=tk.W)
 
         ttk.Button(button_frame_west, text="Exit", command=self.discard_and_exit).pack(side=tk.LEFT, padx=10)
         ttk.Button(button_frame_east, text="Save & Run", command=self.save_and_run).pack(side=tk.RIGHT, padx=20)
@@ -237,8 +241,8 @@ class ConfigEditorApp:
 
         # Console output frame
         console_frame = ttk.LabelFrame(main_frame, text="Console Output", padding="5")
-        console_frame.grid(row=2, column=0, sticky="nsew", pady=5)
-        main_frame.rowconfigure(index=2, weight=1)
+        console_frame.grid(row=3, column=0, sticky="nsew", pady=5)
+        main_frame.rowconfigure(index=3, weight=1)
 
         self.console_text = tk.Text(
             console_frame,
