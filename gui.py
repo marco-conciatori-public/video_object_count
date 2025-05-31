@@ -345,15 +345,15 @@ class ConfigEditorApp:
         self.console_text.config(state='disabled')
         self.console_output_queue.queue.clear()  # Clear any pending queue items
 
-        self.console_redirector.write("--- Starting all_files_in_folder.py.py ---\n")
+        self.console_redirector.write("--- Starting all_files_in_folder.py ---\n")
         # Run the script in a separate thread to keep GUI responsive
         threading.Thread(target=self._run_script_in_thread).start()
 
     def _run_script_in_thread(self):
         try:
             # Construct the command to run your script
-            # We assume all_files_in_folder.py.py is in the same directory
-            script_path = "all_files_in_folder.py.py"
+            # We assume all_files_in_folder.py is in the same directory
+            script_path = "all_files_in_folder.py"
             if not os.path.exists(script_path):
                 self.console_redirector.write(f"Error: Script '{script_path}' not found!\n")
                 return
