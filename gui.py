@@ -1,7 +1,9 @@
 import os
 import yaml
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, filedialog
+
+import global_constants as gc
 
 CONFIG_FILE = 'config.yaml'
 
@@ -15,6 +17,14 @@ PARAMETER_OPTIONS = {
     'output_on_file': [True, False],
     'input_type': ['video', 'image'],
     'region_type': ['vertical_line', 'rectangle'],
+}
+
+# --- Define parameters that are system paths ---
+# Keys here should match keys in your config.yaml
+# You can specify 'file' or 'directory' for each path.
+PATH_PARAMETERS = {
+    'file_folder': 'directory',
+    'file_name': 'file',
 }
 
 
@@ -57,7 +67,7 @@ class ConfigEditorApp:
         self.entries = {}
 
         if not os.path.exists(CONFIG_FILE):
-            messagebox.showinfo("Info", "Application will close as no config is available.")
+            messagebox.showinfo(title="Info", message="Application will close as no config is available.")
             self.root.destroy()
             return
 
@@ -129,6 +139,22 @@ class ConfigEditorApp:
                         elif display_options:
                             combobox.set(display_options[0])
                         combobox.grid(row=row_idx, column=1, sticky=tk.EW, padx=5, pady=3)
+                elif key in PATH_PARAMETERS:
+                    frame_path = ttk.Frame(scrollable_frame)
+                    frame_path.grid(row=row_idx, column=1, sticky=tk.EW, padx=5, pady=3)
+                    frame_path.columnconfigure(index=0, weight=1)
+
+                    path_var = tk.StringVar(value=str(value if value is not None else ""))
+                    entry_path = ttk.Entry(frame_path, textvariable=path_var, width=40)
+                    entry_path.grid(row=0, column=0, sticky=tk.EW, padx=(0, 5))
+                    self.entries[key] = path_var
+
+                    button_text = "Select Directory" if PATH_PARAMETERS[key] == 'directory' else "Select File"
+                    (ttk.Button(
+                        frame_path,
+                        text=button_text,
+                        command=lambda k=key, pv=path_var: self._select_path(k, pv)
+                    ).grid(row=0, column=1, sticky=tk.E))
                 elif isinstance(value, (dict, list)):
                     display_val = yaml.dump(value, indent=2, sort_keys=False).strip()
                     text_area = tk.Text(scrollable_frame, height=min(5, display_val.count('\n') + 2), width=50,
@@ -143,7 +169,7 @@ class ConfigEditorApp:
                     entry.grid(row=row_idx, column=1, sticky=tk.EW, padx=5, pady=3)
                     self.entries[key] = entry_var
                 row_idx += 1
-        scrollable_frame.columnconfigure(1, weight=1)
+        scrollable_frame.columnconfigure(index=1, weight=1)
 
         button_frame = ttk.Frame(main_frame)
         button_frame.grid(row=1, column=0, columnspan=2, pady=10, sticky=tk.E)
@@ -155,9 +181,28 @@ class ConfigEditorApp:
             padx=15,
         )  # More padding
 
+    def _select_path(self, key, path_var):
+        """Opens a file/directory dialog and updates the path_var."""
+        path_type = PATH_PARAMETERS.get(key)
+        if path_type == 'directory':
+            selected_path = filedialog.askdirectory(
+                title=f'Select "{key}" Directory',
+                initialdir=gc.DATA_FOLDER,
+            )
+        elif path_type == 'file':
+            selected_path = filedialog.askopenfilename(
+                title=f'Select "{key}" File',
+                initialdir=gc.DATA_FOLDER,
+            )
+        else:
+            selected_path = None
+
+        if selected_path:
+            path_var.set(selected_path)
+
     def _perform_save(self):
         if self.config_data is None:
-            messagebox.showerror("Error", "No configuration loaded.")
+            messagebox.showerror(title="Error", message="No configuration loaded.")
             return False
 
         updated_config = self.config_data.copy()
@@ -197,7 +242,7 @@ class ConfigEditorApp:
                             updated_config[key] = None
                         else:
                             updated_config[key] = new_value_str
-                    else:  # Original was string or unhandled
+                    else:
                         updated_config[key] = new_value_str
                 # else: complex type, already in updated_config via copy()
             except ValueError as e:
