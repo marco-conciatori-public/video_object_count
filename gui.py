@@ -30,6 +30,45 @@ PATH_PARAMETERS = {
     'file_name': 'file',
 }
 
+# Mappa dei suggerimenti per i parametri
+PARAMETER_HINTS = {
+    'verbose': "Abilita o disabilita i messaggi dettagliati in console output",
+    'save_media': "Specifica se salvare i video con gli oggetti riconosciuti da YOLO",
+    'output_on_file': "Se abilitato, salva il testo visibile in console output su un file",
+    'input_type': "Tipo di input: video o immagine",
+    'region_type': "Se contare gli oggetti che passano una linea verticale o entrano/escano da un'area rettangolare",
+    'file_folder': "Percorso della directory contenente i file",
+    'file_name': "Percorso del file specifico da elaborare, lasciare vuoto per elaborare tutti i file nella cartella",
+}
+
+
+class Tooltip:
+    def __init__(self, widget, text):
+        self.widget = widget
+        self.text = text
+        self.tooltip_window = None
+        self.widget.bind("<Enter>", self.show_tooltip)
+        self.widget.bind("<Leave>", self.hide_tooltip)
+
+    def show_tooltip(self, event=None):
+        if self.tooltip_window or not self.text:
+            return
+        x, y, _, _ = self.widget.bbox("insert")
+        x += self.widget.winfo_rootx() + 25
+        y += self.widget.winfo_rooty() + 20
+        self.tooltip_window = tw = tk.Toplevel(self.widget)
+        tw.wm_overrideredirect(True)
+        tw.wm_geometry(f"+{x}+{y}")
+        label = tk.Label(tw, text=self.text, justify=tk.LEFT,
+                         background="#ffffe0", relief=tk.SOLID, borderwidth=1,
+                         font=("tahoma", "8", "normal"))
+        label.pack(ipadx=1)
+
+    def hide_tooltip(self, event=None):
+        if self.tooltip_window:
+            self.tooltip_window.destroy()
+            self.tooltip_window = None
+
 
 def load_config(file_path):
     if not os.path.exists(file_path):
@@ -169,6 +208,9 @@ class ConfigEditorApp:
         else:
             for key, value in self.config_data.items():
                 ttk.Label(scrollable_frame, text=f"{key}:").grid(row=row_idx, column=0, sticky=tk.W, padx=5, pady=3)
+                label = ttk.Label(scrollable_frame, text=f"{key}:")
+                label.grid(row=row_idx, column=0, sticky=tk.W, padx=5, pady=3)
+                Tooltip(label, PARAMETER_HINTS.get(key, ""))
                 if key in PARAMETER_OPTIONS:
                     options = PARAMETER_OPTIONS[key]
                     current_value = value
