@@ -151,7 +151,7 @@ class ConfigEditorApp:
         self.root = root_window
         self.root.title("YOLO Object Counter")
         # initial window size
-        self.root.geometry("610x800")
+        self.root.geometry("610x675")
         self.initialized_properly = False
         self.config_data = None
         self.entries = {}
