@@ -38,7 +38,12 @@ PARAMETER_HINTS = {
     'input_type': "Tipo di input: video o immagine",
     'region_type': "Se contare gli oggetti che passano una linea verticale o entrano/escano da un'area rettangolare",
     'file_folder': "Percorso della directory contenente i file",
-    'file_name': "Percorso del file specifico da elaborare, lasciare vuoto per elaborare tutti i file nella cartella",
+    'file_name': "Percorso del file specifico da elaborare. lasciare vuoto per elaborare tutti i file nella cartella",
+    'model_name': "Modello YOLO da utilizzare per il riconoscimento oggetti. yolov8s è più veloce,"
+                  "yolo8x è intermedio, yolov9e è più accurato",
+    'selected_classes': "ID delle classi di oggetti da contare, separati da virgole. 0 = person, 1 = bicycle, 2 = car,"
+                        " 3 = motorcycle, 5 = bus",
+    'confidence': "Soglia di confidenza per considerare una rilevazione valida (0.0 - 1.0)",
 }
 
 
