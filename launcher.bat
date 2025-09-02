@@ -12,7 +12,7 @@ set CONDA_ENV_NAME="video_object_count"
 
 REM Set the path to your gui.py script's directory
 REM Make sure to use backslashes and double quotes if the path contains spaces
-set SCRIPT_DIR="C:\Users\human\PycharmProjects\video_object_count\gui.py"
+set SCRIPT_DIR="C:\Users\human\PycharmProjects\video_object_count"
 REM Example if gui.py is directly in the same folder as this .bat file
 REM set SCRIPT_DIR="%~dp0"
 REM If gui.py is in a subfolder, e.g., 'src', you'd set:
