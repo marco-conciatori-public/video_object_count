@@ -19,6 +19,7 @@ PARAMETER_OPTIONS = {
     'save_media': [True, False],
     'output_on_file': [True, False],
     'input_type': ['video', 'image'],
+    'model_name': ['yolov8s.pt', 'yolov8x.pt', 'yolov9e.pt'],
     'region_type': ['vertical_line', 'rectangle'],
 }
 
