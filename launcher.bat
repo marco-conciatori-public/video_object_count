@@ -31,8 +31,5 @@ if %ERRORLEVEL% NEQ 0 (
 
 echo Running gui.py...
 pushd %SCRIPT_DIR%
-python gui.py
+pythonw gui.py
 popd
-
-REM Keep the console window open after script finishes
-pause
