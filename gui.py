@@ -47,6 +47,9 @@ PARAMETER_HINTS = {
     'confidence': "Soglia di confidenza per considerare una rilevazione valida (0.0 - 1.0)",
 }
 
+# Elenco dei parametri da escludere dalla GUI
+EXCLUDED_PARAMETERS = ['region_type', 'x_distance_from_center', 'line_dist_thresh']
+
 
 class Tooltip:
     def __init__(self, widget, text):
@@ -213,6 +216,8 @@ class ConfigEditorApp:
                 .grid(row=row_idx, column=0, columnspan=2, pady=10, padx=5, sticky=tk.W)
         else:
             for key, value in self.config_data.items():
+                if key in EXCLUDED_PARAMETERS:  # Salta i parametri esclusi
+                    continue
                 ttk.Label(scrollable_frame, text=f"{key}:").grid(row=row_idx, column=0, sticky=tk.W, padx=5, pady=3)
                 label = ttk.Label(scrollable_frame, text=f"{key}:")
                 label.grid(row=row_idx, column=0, sticky=tk.W, padx=5, pady=3)
