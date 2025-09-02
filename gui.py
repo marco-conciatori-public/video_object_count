@@ -151,7 +151,7 @@ class ConfigEditorApp:
         self.root = root_window
         self.root.title("YOLO Object Counter")
         # initial window size
-        self.root.geometry("610x675")
+        self.root.geometry("560x680")
         self.initialized_properly = False
         self.config_data = None
         self.entries = {}
@@ -196,7 +196,7 @@ class ConfigEditorApp:
         # Frame for parameters and scrollbar
         param_frame = ttk.Frame(main_frame)
         param_frame.grid(row=1, column=0, sticky="nsew")
-        main_frame.rowconfigure(index=1, weight=3)
+        main_frame.rowconfigure(index=1, weight=1)
         main_frame.columnconfigure(index=0, weight=1)
 
         canvas = tk.Canvas(param_frame)
@@ -295,7 +295,7 @@ class ConfigEditorApp:
         # Console output frame
         console_frame = ttk.LabelFrame(main_frame, text="Console Output", padding="5")
         console_frame.grid(row=3, column=0, sticky="nsew", pady=5)
-        main_frame.rowconfigure(index=3, weight=1)
+        main_frame.rowconfigure(index=3, weight=2)
 
         self.console_text = tk.Text(
             console_frame,
@@ -305,11 +305,14 @@ class ConfigEditorApp:
             fg="lightgray",
             font=("Consolas", 10)
         )
-        self.console_text.pack(expand=True, fill="both")
+        self.console_text.grid(row=0, column=0, sticky="nsew")
 
         console_scrollbar = ttk.Scrollbar(console_frame, command=self.console_text.yview)
-        console_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        console_scrollbar.grid(row=0, column=1, sticky="ns")  # Posiziona la scrollbar a destra
         self.console_text.config(yscrollcommand=console_scrollbar.set)
+
+        console_frame.rowconfigure(0, weight=1)
+        console_frame.columnconfigure(0, weight=1)
 
         self.console_redirector = ConsoleRedirector(self.console_text, self.console_output_queue)
         self.console_redirector.start()
