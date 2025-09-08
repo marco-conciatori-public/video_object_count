@@ -19,7 +19,7 @@ PARAMETER_OPTIONS = {
     'save_media': [True, False],
     'output_on_file': [True, False],
     'input_type': ['video', 'image'],
-    'model_name': ['yolov8s.pt', 'yolov8x.pt', 'yolov9e.pt'],
+    'model_name': ['yolov8s.pt', 'yolov9e.pt'],
     'region_type': ['vertical_line', 'rectangle'],
 }
 
@@ -41,7 +41,7 @@ PARAMETER_HINTS = {
     'file_folder': "Percorso della directory contenente i file",
     'file_name': "Percorso del file specifico da elaborare. lasciare vuoto per elaborare tutti i file nella cartella",
     'model_name': "Modello YOLO da utilizzare per il riconoscimento oggetti. yolov8s è più veloce,"
-                  "yolo8x è intermedio, yolov9e è più accurato",
+                  " yolov9e è più accurato",
     'selected_classes': "ID delle classi di oggetti da contare, separati da virgole. 0 = person, 1 = bicycle, 2 = car,"
                         " 3 = motorcycle, 5 = bus",
     'confidence': "Soglia di confidenza per considerare una rilevazione valida (0.0 - 1.0)",
