@@ -160,7 +160,7 @@ class ConfigEditorApp:
         self.console_text = None
 
         if not os.path.exists(gc.CONFIG_PARAMETER_PATH):
-            messagebox.showinfo(title="Info", message="Application will close as no config is available.")
+            messagebox.showinfo(title="Info", message="Configuration file not found.")
             self.root.destroy()
             return
 
@@ -317,14 +317,15 @@ class ConfigEditorApp:
         self.console_redirector = ConsoleRedirector(self.console_text, self.console_output_queue)
         self.console_redirector.start()
 
-    @staticmethod
-    def _select_path(key, path_var):
+    def _select_path(self, key, path_var):
         """Opens a file/directory dialog and updates the path_var."""
         path_type = PATH_PARAMETERS.get(key)
         if path_type == 'directory':
             selected_path = filedialog.askdirectory(title=f"Select {key} Directory", initialdir=gc.DATA_FOLDER)
         elif path_type == 'file':
-            selected_path = filedialog.askopenfilename(title=f"Select {key} File", initialdir=gc.DATA_FOLDER)
+            selected_path = filedialog.askopenfilename(title=f"Select {key} File", initialdir=self.config_data['file_folder'])
+            # keep only the file name, not full path
+            selected_path = os.path.basename(selected_path)
         else:
             selected_path = None
 
@@ -405,15 +406,23 @@ class ConfigEditorApp:
         self.console_text.config(state='disabled')
         self.console_output_queue.queue.clear()  # Clear any pending queue items
 
-        self.console_redirector.write("--- Starting all_files_in_folder.py ---\n")
-        # Run the script in a separate thread to keep GUI responsive
-        threading.Thread(target=self._run_script_in_thread).start()
+        script_args = {}
+        if self.config_data['file_name'] in [None, '']:
+            script_args = {'script_path': 'all_files_in_folder.py'}
+        else:
+            if self.config_data['input_type'] == 'video':
+                script_args = {'script_path': 'count_objects_from_video.py'}
+            elif self.config_data['input_type'] == 'image':
+                script_args = {'script_path': 'count_objects_from_image.py'}
 
-    def _run_script_in_thread(self):
+        # Run the script in a separate thread to keep GUI responsive
+        threading.Thread(target=self._run_script_in_thread, kwargs=script_args).start()
+
+    def _run_script_in_thread(self, script_path: str):
         try:
+            self.console_redirector.write(f"--- Starting {script_path} ---\n")
             # Construct the command to run your script
-            # We assume all_files_in_folder.py is in the same directory
-            script_path = "all_files_in_folder.py"
+            # We assume the script is in the same directory
             if not os.path.exists(script_path):
                 self.console_redirector.write(f"Error: Script '{script_path}' not found!\n")
                 return

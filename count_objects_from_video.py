@@ -21,6 +21,9 @@ def count_objects_(**kwargs) -> dict:
     # Load video
     video_path = gc.DATA_FOLDER + parameters['file_folder'] + parameters['file_name']
     cap = cv2.VideoCapture(video_path)
+    if not cap.isOpened():
+        video_path = parameters['file_folder'] + parameters['file_name']
+        cap = cv2.VideoCapture(video_path)
     assert cap.isOpened(), f'could not open file "{video_path}"'
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
