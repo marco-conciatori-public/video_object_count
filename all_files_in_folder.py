@@ -11,6 +11,8 @@ def all_files_in_folder_(**kwargs) -> dict:
     file_counter = 0
     parameters = args.import_and_check(gc.CONFIG_PARAMETER_PATH, **kwargs)
     media_path = gc.DATA_FOLDER + parameters['file_folder']
+    if Path(parameters['file_folder']).is_absolute():
+        media_path = parameters['file_folder']
     media_format = gc.IMAGE_FORMAT
     if parameters['input_type'] == 'video':
         media_format = gc.VIDEO_FORMAT
@@ -36,7 +38,12 @@ def all_files_in_folder_(**kwargs) -> dict:
         # print(f'\tcount_by_file: {count_by_file}')
         # print(f'\ttotal_count: {total_count}')
     if parameters['output_on_file']:
-        output_path = gc.OUTPUT_FOLDER + 'counting_result_' + parameters['file_folder']
+        temp = parameters['file_folder'].split('/')
+        if temp[-1] == '':
+            folder_name = temp[-2]
+        else:
+            folder_name = temp[-1]
+        output_path = gc.OUTPUT_FOLDER + 'counting_result_' + folder_name + '/'
         Path(output_path).mkdir(parents=True, exist_ok=True)
         with open(output_path + 'total_count.json', 'w') as json_file:
             json.dump(total_count, json_file)
