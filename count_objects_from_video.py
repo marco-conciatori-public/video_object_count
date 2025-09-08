@@ -49,7 +49,7 @@ def count_objects_(**kwargs) -> dict:
 
     if parameters['save_media']:
         # Video writer
-        output_path = (gc.OUTPUT_FOLDER + 'counting_result_' + parameters['file_folder'] + parameters['file_name'])
+        output_path = (gc.OUTPUT_FOLDER + 'counting_result_' + parameters['file_name'])
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         fourcc_code = cv2.VideoWriter_fourcc(*'mp4v')
         video_writer = cv2.VideoWriter(
