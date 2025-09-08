@@ -1,0 +1,43 @@
+## OUTPUT
+verbose: True
+save_media: True
+output_on_file: True
+
+## INPUT
+#input_type: image
+input_type: video
+file_folder: wolf/
+file_name: 2023_05_06_20_22_46.mp4
+
+## NEURAL NETWORK
+#model_name: yolov8x.pt
+model_name: yolov9e.pt
+# minimum recognition confidence above which YOLO signals an object
+confidence: 0.75
+# class_ids of interest
+selected_classes: [
+  0, # person
+  1, # bicycle
+  2, # car
+  3, # motorcycle
+  5, # bus
+#  14, # bird
+#  15, # cat
+#  16, # dog
+#  17, # horse
+#  18, # sheep
+#  19, # cow
+#  20, # elephant
+#  21, # bear
+#  22, # zebra
+#  23, # giraffe
+]
+
+## OBJECT-COUNTER PARAMETERS
+# define region points
+region_type: vertical_line
+#region_points: rectangle
+x_distance_from_center: 100
+# Euclidean distance from the line from which an object is counted
+line_dist_thresh: 40
+#cls_txtdisplay_gap: 1000
