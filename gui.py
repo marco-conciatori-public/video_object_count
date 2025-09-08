@@ -431,7 +431,7 @@ class ConfigEditorApp:
 
             # Example: Running the script with python executable
             # You might need to add arguments based on how your script uses the config.yaml
-            command = [sys.executable, script_path]  # Use sys.executable to ensure correct python env
+            command = [sys.executable, '-u', script_path]  # Use sys.executable to ensure correct python env
 
             # Redirect stdout and stderr to the Popen object's pipes
             process = subprocess.Popen(
