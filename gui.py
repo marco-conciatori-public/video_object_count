@@ -383,6 +383,8 @@ class ConfigEditorApp:
                                      f"Original type: {type(original_value_in_config).__name__}.\nError: {e}")
                 return False  # Stop saving
 
+        self.console_redirector.write("--- configuration updated ---\n")
+
         if save_config_to_file(gc.CONFIG_PARAMETER_PATH, updated_config):
             self.config_data = updated_config  # Update in-memory config
             return True
