@@ -321,7 +321,7 @@ class ConfigEditorApp:
         """Opens a file/directory dialog and updates the path_var."""
         path_type = PATH_PARAMETERS.get(key)
         if path_type == 'directory':
-            selected_path = filedialog.askdirectory(title=f"Select {key} Directory", initialdir=gc.DATA_FOLDER)
+            selected_path = filedialog.askdirectory(title=f"Select {key} Directory", initialdir=gc.DATA_FOLDER) + '/'
         elif path_type == 'file':
             selected_path = filedialog.askopenfilename(title=f"Select {key} File", initialdir=self.config_data['file_folder'])
             # keep only the file name, not full path
