@@ -1,12 +1,10 @@
 @echo off
 REM This script activates the Conda environment and runs the GUI.
 
-REM --- IMPORTANT: Configure these paths ---
-REM Set the path to your Conda installation's 'Scripts' directory.
 REM This is typically: C:\Users\YOUR_USERNAME\anaconda3\Scripts
-REM Or: C:\Users\YOUR_USERNAME\Miniconda3\Scripts
-set CONDA_BASE_SCRIPTS="C:\Users\human\anaconda3\Scripts"
+set CONDA_BASE_SCRIPTS="C:\Users\%USERNAME%\anaconda3\Scripts"
 
+REM --- IMPORTANT: Configure these paths ---
 REM Set the name of your Conda environment
 set CONDA_ENV_NAME="video_object_count"
 
